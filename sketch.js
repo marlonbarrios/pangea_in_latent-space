@@ -2,7 +2,7 @@
 let offsets = [
     { xoff: 500, yoff: 10, roff: 400 }, // Tectonics of Otherness
     { xoff: 700, yoff: 20, roff: 500 }, // Peoples and Features
-    { xoff: 1000, yoff: 300, roff: 600 }, // Language
+    { xoff: 1000, yoff: 300, roff: 600 }, // Transcriptural Fugue
     { xoff: 1100, yoff: 400, roff: 700 }, // Memory and Ancestors
     { xoff: 1200, yoff: 500, roff: 800 }, // Manifesto the Residtencia Poetica
     { xoff: 1300, yoff: 600, roff: 900 }, // Cumbia Rebajada
@@ -20,7 +20,7 @@ let offsets = [
     "the map is not the territory", 
     "tectonics of otherness", 
     "pangea people",
-    "written language", 
+    "Transcriptural Fugue", 
     "ghosts and ancestors", 
     "manifesto the resistencia poetica",
     "cumbia rebajada/migrating forms", 
