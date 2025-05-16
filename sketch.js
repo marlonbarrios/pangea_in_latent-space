@@ -50,7 +50,7 @@ let offsets = [
     "the map is not the territory": "https://en.wikipedia.org/wiki/Cartography",
     "tectonics of otherness": "https://marlonbarrios.github.io/tectonics_of_otherness/",
     "pangea people": "https://originarios.vercel.app/",
-    "written language": "https://en.wikipedia.org/wiki/Language",
+    "Transcriptural Fugue": "https://transcripturalfugue-marlonbarrios-projects.vercel.app/",
     "ghosts and ancestors": "https://en.wikipedia.org/wiki/Cultural_memory",
     "manifesto the resistencia poetica": "https://www.youtube.com/watch?v=yrmAd6rIdqk&t=34s",
     "cumbia rebajada/migrating forms": "https://en.wikipedia.org/wiki/Cumbia",
