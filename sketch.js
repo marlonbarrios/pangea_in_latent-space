@@ -96,6 +96,308 @@ let offsets = [
   let useVisualTrails = false;
   let showBoundaryFill = true; // New variable for boundary fill
 
+  // Add these variables at the top
+  let outsideBoids = [];
+  let insideBoids = [];
+  const NUM_OUTSIDE_BOIDS = 60;
+  const NUM_INSIDE_BOIDS = 45;
+  const NUM_CHASE_BOIDS = 50;  // New third population
+
+  // Add new boid array
+  let chaseBoids = [];  // Third population
+  let showGroups = true;  // Changed from showPopulation
+  let showOutsideGroup = true;  // Changed from showOutsidePopulation
+  let showInsideGroup = true;   // Changed from showInsidePopulation
+  let showChaseGroup = true;    // Changed from showChasePopulation
+
+  // Add Boid class
+  class Boid {
+    constructor(x, y, type) {
+      this.position = createVector(x, y);
+      this.velocity = p5.Vector.random2D();
+      this.velocity.setMag(random(2, 4));
+      this.acceleration = createVector();
+      this.maxForce = 0.15;
+      this.maxSpeed = 2.5;
+      this.type = type; // 'outside', 'inside', or 'chase'
+      this.size = 4.0;
+    }
+
+    edges() {
+      if (this.position.x > width) this.position.x = 0;
+      if (this.position.x < 0) this.position.x = width;
+      if (this.position.y > height) this.position.y = 0;
+      if (this.position.y < 0) this.position.y = height;
+    }
+
+    align(boids) {
+      let perceptionRadius = 40;
+      let steering = createVector();
+      let total = 0;
+      for (let other of boids) {
+        let d = dist(
+          this.position.x,
+          this.position.y,
+          other.position.x,
+          other.position.y
+        );
+        if (other != this && d < perceptionRadius) {
+          steering.add(other.velocity);
+          total++;
+        }
+      }
+      if (total > 0) {
+        steering.div(total);
+        steering.setMag(this.maxSpeed);
+        steering.sub(this.velocity);
+        steering.limit(this.maxForce);
+      }
+      return steering;
+    }
+
+    cohesion(boids) {
+      let perceptionRadius = 80;
+      let steering = createVector();
+      let total = 0;
+      for (let other of boids) {
+        let d = dist(
+          this.position.x,
+          this.position.y,
+          other.position.x,
+          other.position.y
+        );
+        if (other != this && d < perceptionRadius) {
+          steering.add(other.position);
+          total++;
+        }
+      }
+      if (total > 0) {
+        steering.div(total);
+        steering.sub(this.position);
+        steering.setMag(this.maxSpeed);
+        steering.sub(this.velocity);
+        steering.limit(this.maxForce);
+      }
+      return steering;
+    }
+
+    separation(boids) {
+      let perceptionRadius = 40;
+      let steering = createVector();
+      let total = 0;
+      for (let other of boids) {
+        let d = dist(
+          this.position.x,
+          this.position.y,
+          other.position.x,
+          other.position.y
+        );
+        if (other != this && d < perceptionRadius) {
+          let diff = p5.Vector.sub(this.position, other.position);
+          diff.div(d * d);
+          steering.add(diff);
+          total++;
+        }
+      }
+      if (total > 0) {
+        steering.div(total);
+        steering.setMag(this.maxSpeed);
+        steering.sub(this.velocity);
+        steering.limit(this.maxForce);
+      }
+      return steering;
+    }
+
+    seekBoundary(hull) {
+      if (!hull || hull.length < 3) return createVector();
+      
+      let steering = createVector();
+      let closestPoint = null;
+      let minDist = Infinity;
+      
+      // Find closest point on boundary
+      for (let i = 0; i < hull.length; i++) {
+        let point = hull[i];
+        let nextPoint = hull[(i + 1) % hull.length];
+        
+        // Find closest point on the line segment
+        let closest = this.getClosestPointOnLine(point, nextPoint);
+        let d = dist(this.position.x, this.position.y, closest.x, closest.y);
+        
+        if (d < minDist) {
+          minDist = d;
+          closestPoint = closest;
+        }
+      }
+      
+      if (closestPoint) {
+        // All boids try to stay inside
+        if (minDist < 50) {
+          // If close to boundary, steer away from it
+          steering = p5.Vector.sub(this.position, closestPoint);
+        } else if (!this.isInsideHull(hull)) {
+          // If outside, steer back inside
+          steering = p5.Vector.sub(closestPoint, this.position);
+          steering.mult(2); // Stronger force to return inside
+        }
+        
+        if (steering.mag() > 0) {
+          steering.setMag(this.maxSpeed);
+          steering.sub(this.velocity);
+          steering.limit(this.maxForce * 1.5); // Stronger boundary force
+        }
+      }
+      
+      return steering;
+    }
+
+    // Helper method to check if boid is inside hull
+    isInsideHull(hull) {
+      let inside = false;
+      for (let i = 0, j = hull.length - 1; i < hull.length; j = i++) {
+        let xi = hull[i].x, yi = hull[i].y;
+        let xj = hull[j].x, yj = hull[j].y;
+        
+        if (((yi > this.position.y) !== (yj > this.position.y)) &&
+            (this.position.x < (xj - xi) * (this.position.y - yi) / (yj - yi) + xi)) {
+          inside = !inside;
+        }
+      }
+      return inside;
+    }
+
+    // Helper method to find closest point on line segment
+    getClosestPointOnLine(a, b) {
+      let ax = this.position.x - a.x;
+      let ay = this.position.y - a.y;
+      let bx = b.x - a.x;
+      let by = b.y - a.y;
+      
+      let t = (ax * bx + ay * by) / (bx * bx + by * by);
+      t = constrain(t, 0, 1);
+      
+      return createVector(
+        a.x + t * bx,
+        a.y + t * by
+      );
+    }
+
+    // Add new method to avoid circles
+    avoidCircles(positions) {
+      let steering = createVector();
+      
+      positions.forEach((pos, index) => {
+        if (index === 0) return; // Skip Pangea node
+        
+        let size = (pos.connections + 1) * BASE_NODE_SIZE;
+        let d = dist(this.position.x, this.position.y, pos.x, pos.y);
+        
+        // If boid is too close to circle, steer away
+        let avoidanceRadius = size/2 + 20; // Extra padding
+        if (d < avoidanceRadius) {
+          let diff = p5.Vector.sub(this.position, createVector(pos.x, pos.y));
+          diff.div(d * d); // Stronger avoidance when closer
+          steering.add(diff);
+        }
+      });
+      
+      if (steering.mag() > 0) {
+        steering.setMag(this.maxSpeed);
+        steering.sub(this.velocity);
+        steering.limit(this.maxForce * 2); // Stronger avoidance force
+      }
+      return steering;
+    }
+
+    // Add method to chase or be attracted to other populations
+    chase(boids) {
+      let steering = createVector();
+      let perceptionRadius = 100;
+      let total = 0;
+      
+      for (let other of boids) {
+        if (other === this) continue;
+        
+        let d = dist(this.position.x, this.position.y, other.position.x, other.position.y);
+        if (d < perceptionRadius) {
+          let force = p5.Vector.sub(other.position, this.position);
+          
+          // Different behaviors based on type
+          if (this.type === 'outside') {
+            // Outside boids chase inside boids
+            if (other.type === 'inside') force.mult(1);
+            else if (other.type === 'chase') force.mult(-1);
+          } else if (this.type === 'inside') {
+            // Inside boids chase chase boids
+            if (other.type === 'chase') force.mult(1);
+            else if (other.type === 'outside') force.mult(-1);
+          } else if (this.type === 'chase') {
+            // Chase boids chase outside boids
+            if (other.type === 'outside') force.mult(1);
+            else if (other.type === 'inside') force.mult(-1);
+          }
+          
+          steering.add(force);
+          total++;
+        }
+      }
+      
+      if (total > 0) {
+        steering.div(total);
+        steering.setMag(this.maxSpeed);
+        steering.sub(this.velocity);
+        steering.limit(this.maxForce);
+      }
+      return steering;
+    }
+
+    // Update flock method to include chase behavior
+    flock(boids, hull, positions) {
+      let alignment = this.align(boids);
+      let cohesion = this.cohesion(boids);
+      let separation = this.separation(boids);
+      let boundary = this.seekBoundary(hull);
+      let avoidance = this.avoidCircles(positions);
+      let chase = this.chase(boids);
+      
+      alignment.mult(0.6);
+      cohesion.mult(0.6);
+      separation.mult(1.6);
+      boundary.mult(1.0);
+      avoidance.mult(2.2);
+      chase.mult(1.5);  // Chase force
+      
+      this.acceleration.add(alignment);
+      this.acceleration.add(cohesion);
+      this.acceleration.add(separation);
+      this.acceleration.add(boundary);
+      this.acceleration.add(avoidance);
+      this.acceleration.add(chase);
+    }
+
+    update() {
+      this.position.add(this.velocity);
+      this.velocity.add(this.acceleration);
+      this.velocity.limit(this.maxSpeed);
+      this.acceleration.mult(0);
+    }
+
+    show() {
+      strokeWeight(this.size);
+      // Different colors for each type
+      let boidColor;
+      if (this.type === 'outside') {
+        boidColor = COLORS.teal + "CC";
+      } else if (this.type === 'inside') {
+        boidColor = COLORS.yellow + "CC";
+      } else {
+        boidColor = COLORS.red + "CC"; // Chase boids are red
+      }
+      stroke(boidColor);
+      point(this.position.x, this.position.y);
+    }
+  }
+
   function setup() {
     createCanvas(windowWidth, windowHeight);
   
@@ -108,6 +410,29 @@ let offsets = [
   
     // Set default cursor to crosshairs
     cursor(CROSS);
+  
+    // Initialize outside boids
+    for (let i = 0; i < NUM_OUTSIDE_BOIDS; i++) {
+      outsideBoids.push(new Boid(random(width), random(height), 'outside'));
+    }
+    
+    // Initialize inside boids
+    for (let i = 0; i < NUM_INSIDE_BOIDS; i++) {
+      insideBoids.push(new Boid(width/2, height/2, 'inside'));
+    }
+
+    // Initialize chase boids
+    for (let i = 0; i < NUM_CHASE_BOIDS; i++) {
+      chaseBoids.push(new Boid(random(width), random(height), 'chase'));
+    }
+    
+    // Update type for existing boids
+    for (let boid of outsideBoids) {
+      boid.type = 'outside';
+    }
+    for (let boid of insideBoids) {
+      boid.type = 'inside';
+    }
   }
   
   function windowResized() {
@@ -255,14 +580,16 @@ let offsets = [
       });
     }
   
-    // Draw boundary if enabled - this represents Pangea's presence
+    // Draw boundary if enabled
     if (showBoundary) {
       let hullPoints = [];
       positions.forEach((pos, index) => {
         if (index === 0) return;
         let size = (pos.connections + 1) * 20;
-        let radius = size / 2;
-        for (let angle = 0; angle < TWO_PI; angle += PI/4) {
+        let radius = (size / 2) * 1.5; // Make boundary 50% larger than circles
+        
+        // Create more points around each circle for smoother boundary
+        for (let angle = 0; angle < TWO_PI; angle += PI/8) {
           hullPoints.push({
             x: pos.x + cos(angle) * radius,
             y: pos.y + sin(angle) * radius
@@ -280,7 +607,7 @@ let offsets = [
           beginShape();
           noStroke();
           let fillColor = color(COLORS.teal);
-          fillColor.setAlpha(40); // Increased from 15 to 40 for more visibility
+          fillColor.setAlpha(30); // More transparent fill
           fill(fillColor);
           
           // Draw the shape with fill
@@ -288,14 +615,14 @@ let offsets = [
             let point = hull[i];
             let nextPoint = hull[(i + 1) % hull.length];
             
-            // Calculate control points for bezier
+            // Increase elasticity for larger boundary
             let dx = nextPoint.x - point.x;
             let dy = nextPoint.y - point.y;
             let distance = sqrt(dx * dx + dy * dy);
             
             let noiseFactor = noise(point.x * 0.01 + boundaryNoiseOffset, 
                                   point.y * 0.01 + boundaryNoiseOffset);
-            let displacement = map(noiseFactor, 0, 1, -ELASTICITY, ELASTICITY);
+            let displacement = map(noiseFactor, 0, 1, -ELASTICITY * 1.2, ELASTICITY * 1.2);
             
             let cp1x = point.x + dx/3 - dy * displacement/distance;
             let cp1y = point.y + dy/3 + dx * displacement/distance;
@@ -307,14 +634,6 @@ let offsets = [
             }
             
             bezierVertex(cp1x, cp1y, cp2x, cp2y, nextPoint.x, nextPoint.y);
-            
-            // Store points for text placement
-            let steps = 10;
-            for (let t = 0; t < 1; t += 1/steps) {
-              let x = bezierPoint(point.x, cp1x, cp2x, nextPoint.x, t);
-              let y = bezierPoint(point.y, cp1y, cp2y, nextPoint.y, t);
-              boundaryTextPoints.push({x, y});
-            }
           }
           endShape(CLOSE);
         }
@@ -322,9 +641,8 @@ let offsets = [
         // Draw the boundary stroke
         noFill();
         stroke(COLORS.teal);
-        strokeWeight(3);
+        strokeWeight(2); // Thinner stroke for larger boundary
         
-        // Draw the same shape again for the stroke
         beginShape();
         for (let i = 0; i < hull.length; i++) {
           let point = hull[i];
@@ -336,7 +654,7 @@ let offsets = [
           
           let noiseFactor = noise(point.x * 0.01 + boundaryNoiseOffset, 
                                 point.y * 0.01 + boundaryNoiseOffset);
-          let displacement = map(noiseFactor, 0, 1, -ELASTICITY, ELASTICITY);
+          let displacement = map(noiseFactor, 0, 1, -ELASTICITY * 1.2, ELASTICITY * 1.2);
           
           let cp1x = point.x + dx/3 - dy * displacement/distance;
           let cp1y = point.y + dy/3 + dx * displacement/distance;
@@ -355,6 +673,50 @@ let offsets = [
         drawBoundaryText(hull);
         
         boundaryNoiseOffset += NOISE_INCREMENT;
+      }
+    }
+  
+    // Draw groups completely independently
+    if (showGroups) {
+      // Calculate hull for groups even if boundary is hidden
+      let hullPoints = [];
+      positions.forEach((pos, index) => {
+        if (index === 0) return;
+        hullPoints.push(pos);
+      });
+      let hull = getConvexHull(hullPoints);
+      
+      let allGroups = [
+        ...(showOutsideGroup ? outsideBoids : []),
+        ...(showInsideGroup ? insideBoids : []),
+        ...(showChaseGroup ? chaseBoids : [])
+      ];
+      
+      if (showOutsideGroup) {
+        for (let member of outsideBoids) {
+          member.edges();
+          member.flock(allGroups, hull, positions);
+          member.update();
+          member.show();
+        }
+      }
+      
+      if (showInsideGroup) {
+        for (let member of insideBoids) {
+          member.edges();
+          member.flock(allGroups, hull, positions);
+          member.update();
+          member.show();
+        }
+      }
+      
+      if (showChaseGroup) {
+        for (let member of chaseBoids) {
+          member.edges();
+          member.flock(allGroups, hull, positions);
+          member.update();
+          member.show();
+        }
       }
     }
   
@@ -444,12 +806,19 @@ let offsets = [
       showBoundary = !showBoundary;
     } else if (key === 'v') {
       useVisualTrails = !useVisualTrails;
-      // Clear the screen when turning trails off
       if (!useVisualTrails) {
         background(COLORS.darkBlue);
       }
     } else if (key === 'f') {
       showBoundaryFill = !showBoundaryFill;
+    } else if (key === 'p') {
+      showGroups = !showGroups;
+    } else if (key === '1') {
+      showOutsideGroup = !showOutsideGroup;
+    } else if (key === '2') {
+      showInsideGroup = !showInsideGroup;
+    } else if (key === '3') {
+      showChaseGroup = !showChaseGroup;
     }
   }
   
@@ -531,12 +900,13 @@ let offsets = [
     let x = width - controlPanelWidth - controlPanelMargin;
     let y = controlPanelMargin;
     
-    // Update panel background
-    fill(COLORS.darkBlue + "99"); // Add 60% transparency
+    // Update panel height to accommodate new controls
+    controlPanelHeight = 200; // Increased for new controls
+    
+    fill(COLORS.darkBlue + "99");
     noStroke();
     rect(x, y, controlPanelWidth, controlPanelHeight, 10);
     
-    // Draw controls text
     textAlign(LEFT, TOP);
     textSize(14);
     fill(COLORS.white);
@@ -547,7 +917,6 @@ let offsets = [
     text('CONTROLS:', textX, textY);
     textY += lineHeight + 5;
     
-    // Show current states
     text(`[L] Lines: ${showLines ? 'ON' : 'OFF'}`, textX, textY);
     textY += lineHeight;
     
@@ -564,6 +933,18 @@ let offsets = [
     textY += lineHeight;
     
     text(`[F] Fill: ${showBoundaryFill ? 'ON' : 'OFF'}`, textX, textY);
+    textY += lineHeight;
+    
+    text(`[P] All Groups: ${showGroups ? 'ON' : 'OFF'}`, textX, textY);
+    textY += lineHeight;
+    
+    text(`[1] Teal Group: ${showOutsideGroup ? 'ON' : 'OFF'}`, textX, textY);
+    textY += lineHeight;
+    
+    text(`[2] Yellow Group: ${showInsideGroup ? 'ON' : 'OFF'}`, textX, textY);
+    textY += lineHeight;
+    
+    text(`[3] Red Group: ${showChaseGroup ? 'ON' : 'OFF'}`, textX, textY);
   }
 
   // Updated drawBoundaryText function
