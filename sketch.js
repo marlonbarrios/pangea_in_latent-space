@@ -103,6 +103,7 @@ let showBoundary = true;
 // Update URLs object to include both English and Spanish versions
 const urls = {
   // English URLs
+  "pangea in latent space": "https://marlonbarrios.github.io/pangea_in_latent_space/",
   "the map is not the territory": "https://en.wikipedia.org/wiki/Cartography",
   "tectonics of otherness": "https://marlonbarrios.github.io/tectonics_of_otherness/",
   "pangea people": "https://originarios.vercel.app/",
@@ -116,9 +117,10 @@ const urls = {
   "the south of the north/sami": "https://en.wikipedia.org/wiki/Sami_people",
   "dark enlightment": "https://en.wikipedia.org/wiki/Dark_enlightenment",
   "UAIIN indigenous university": "https://uaiinpebi-cric.edu.co/la-universidad/#resena",
-  "The Emigrant - infinite story": "https://marlonbarrios.github.io/the_emigrant/",
+  "The Emigrant - infinite story": "https://www.latam.ufl.edu/people/center-based-faculty/luis-felipe-lomeli/",
 
   // Spanish URLs (same destinations)
+  "pangea en el espacio latente": "https://marlonbarrios.github.io/pangea_in_latent_space/",
   "el mapa no es el territorio": "https://en.wikipedia.org/wiki/Cartography",
   "tectónicas de la otredad": "https://marlonbarrios.github.io/tectonics_of_otherness/",
   "pueblos pangea": "https://originarios.vercel.app/",
@@ -132,7 +134,7 @@ const urls = {
   "el sur del norte/sami": "https://en.wikipedia.org/wiki/Sami_people",
   "iluminación oscura": "https://en.wikipedia.org/wiki/Dark_enlightenment",
   "UAIIN universidad indígena": "https://uaiinpebi-cric.edu.co/la-universidad/#resena",
-  "El Emigrante - historia infinita": "https://marlonbarrios.github.io/the_emigrant/"
+  "El Emigrante - historia infinita": "https://www.latam.ufl.edu/people/center-based-faculty/luis-felipe-lomeli/"
 };
 
 // Add new global variables for boundary animation
