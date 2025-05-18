@@ -16,24 +16,76 @@ let offsets = [
   { xoff: 2100, yoff: 1400, roff: 1700 }, // The Emigrant
 ];
 
+// Change default language to English
+let currentLanguage = 'en'; // Changed from 'es' to 'en'
 
-
-let concepts = [
-  "el mapa no es el territorio",
-  "tectónicas de la otredad",
-  "pueblos pangea",
-  "Fuga Transcriptural",
-  "fantasmas y ancestros",
-  "manifiesto de la resistencia poética",
-  "cumbia rebajada/formas migrantes",
-  "ciber-gobierno",
-  "economía solidaria",
-  "tecno-economía",
-  "el sur del norte/sami",
-  "iluminación oscura",
-  "UAIIN universidad indígena",
-  "El Emigrante - historia infinita"
-];
+// Update translations object with complete bilingual support
+const translations = {
+  en: {
+    concepts: [
+      "the map is not the territory",
+      "tectonics of otherness",
+      "pangea people",
+      "Transcriptural Fugue",
+      "ghosts and ancestors",
+      "manifesto the resistencia poetica",
+      "cumbia rebajada/migrating forms",
+      "cyber-government",
+      "solidarity economy",
+      "techno-economy",
+      "the south of the north/sami",
+      "dark enlightment",
+      "UAIIN indigenous university",
+      "The Emigrant - infinite story"
+    ],
+    controls: {
+      title: "CONTROLS",
+      lines: "Lines",
+      text: "Text",
+      circles: "Circles",
+      boundary: "Boundary",
+      trails: "Trails",
+      fill: "Fill",
+      groups: "All Groups",
+      tealGroup: "Teal Group",
+      yellowGroup: "Yellow Group",
+      redGroup: "Red Group"
+    },
+    boundary: "pangea in latent space"
+  },
+  es: {
+    concepts: [
+      "el mapa no es el territorio",
+      "tectónicas de la otredad",
+      "pueblos pangea",
+      "Fuga Transcriptural",
+      "fantasmas y ancestros",
+      "manifiesto de la resistencia poética",
+      "cumbia rebajada/formas migrantes",
+      "ciber-gobierno",
+      "economía solidaria",
+      "tecno-economía",
+      "el sur del norte/sami",
+      "iluminación oscura",
+      "UAIIN universidad indígena",
+      "El Emigrante - historia infinita"
+    ],
+    controls: {
+      title: "CONTROLES",
+      lines: "Líneas",
+      text: "Texto",
+      circles: "Círculos",
+      boundary: "Borde",
+      trails: "Rastros",
+      fill: "Relleno",
+      groups: "Todos los Grupos",
+      tealGroup: "Grupo Turquesa",
+      yellowGroup: "Grupo Amarillo",
+      redGroup: "Grupo Rojo"
+    },
+    boundary: "pangea en el espacio latente"
+  }
+};
 
 // Visibility flags
 let showLines = true;
@@ -48,8 +100,25 @@ let hoveredIndex = -1; // Track which circle is being hovered
 // Add to the global variables
 let showBoundary = true;
 
-// Add URLs object at the top with other global variables
+// Update URLs object to include both English and Spanish versions
 const urls = {
+  // English URLs
+  "the map is not the territory": "https://en.wikipedia.org/wiki/Cartography",
+  "tectonics of otherness": "https://marlonbarrios.github.io/tectonics_of_otherness/",
+  "pangea people": "https://originarios.vercel.app/",
+  "Transcriptural Fugue": "https://transcripturalfugue-marlonbarrios-projects.vercel.app/",
+  "ghosts and ancestors": "https://en.wikipedia.org/wiki/Cultural_memory",
+  "manifesto the resistencia poetica": "https://www.youtube.com/watch?v=yrmAd6rIdqk&t=34s",
+  "cumbia rebajada/migrating forms": "https://en.wikipedia.org/wiki/Cumbia",
+  "cyber-government": "https://en.wikipedia.org/wiki/Cybernetics",
+  "solidarity economy": "https://en.wikipedia.org/wiki/Care_work",
+  "techno-economy": "https://en.wikipedia.org/wiki/Digital_economy",
+  "the south of the north/sami": "https://en.wikipedia.org/wiki/Sami_people",
+  "dark enlightment": "https://en.wikipedia.org/wiki/Dark_enlightenment",
+  "UAIIN indigenous university": "https://uaiinpebi-cric.edu.co/la-universidad/#resena",
+  "The Emigrant - infinite story": "https://marlonbarrios.github.io/the_emigrant/",
+
+  // Spanish URLs (same destinations)
   "el mapa no es el territorio": "https://en.wikipedia.org/wiki/Cartography",
   "tectónicas de la otredad": "https://marlonbarrios.github.io/tectonics_of_otherness/",
   "pueblos pangea": "https://originarios.vercel.app/",
@@ -63,7 +132,7 @@ const urls = {
   "el sur del norte/sami": "https://en.wikipedia.org/wiki/Sami_people",
   "iluminación oscura": "https://en.wikipedia.org/wiki/Dark_enlightenment",
   "UAIIN universidad indígena": "https://uaiinpebi-cric.edu.co/la-universidad/#resena",
-  "El Emigrante - historia infinita": "https://www.latam.ufl.edu/people/center-based-faculty/luis-felipe-lomeli/"
+  "El Emigrante - historia infinita": "https://marlonbarrios.github.io/the_emigrant/"
 };
 
 // Add new global variables for boundary animation
@@ -92,7 +161,7 @@ let showPangeaConnections = false;
 const BASE_NODE_SIZE = 20; // Increased from 20
 
 // Update the boundary text variables
-const BOUNDARY_TEXT = "pangea en el espacio latente";
+const BOUNDARY_TEXT = "pangea in latent space";
 let boundaryPosition = 0;
 let textWave = 10; // Increased from 0 to 10
 const BOUNDARY_OFFSET =-50; // Increased from 60 to 100 to keep text further from boundary
@@ -405,18 +474,20 @@ class Boid {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-
-  console.log('URLs loaded:', urls); // Debug log
-
-  // Initialize the slider with new position and half speed
+  background(COLORS.darkBlue);
+  
+  // Initialize with English
+  currentLanguage = 'en';
+  
+  // Initialize slider
   slider = createSlider(0, 0.02, 0.0005, 0.001);
   slider.position(20, height - 40);
   slider.style('width', '170px');
-
-  // Set default cursor to crosshairs
-  cursor(CROSS);
-
-  // Initialize outside boids
+  
+  // Add language toggle with English as default
+  addLanguageToggle();
+  
+  // Initialize boids
   for (let i = 0; i < NUM_OUTSIDE_BOIDS; i++) {
     outsideBoids.push(new Boid(random(width), random(height), 'outside'));
   }
@@ -736,7 +807,7 @@ function drawConceptsAndLines() {
     if (d < size/2) {
       hoveredIndex = index;
       // Only show hand cursor if there's a URL for this concept
-      if (urls[concepts[index]]) {
+      if (urls[translations[currentLanguage].concepts[index]]) {
         cursor(HAND);
       }
     }
@@ -762,7 +833,7 @@ function drawConceptsAndLines() {
       textStyle(BOLD);
       noStroke();
       fill("#1a1a1a"); // Very dark gray, almost black
-      text(concepts[index], pos.x, pos.y);
+      text(translations[currentLanguage].concepts[index], pos.x, pos.y);
       textStyle(NORMAL);
     }
   });
@@ -775,30 +846,24 @@ function drawConceptsAndLines() {
 }
 
 function getColorForConcept(index) {
-  // Create a palette of 12 distinct colors with carefully chosen alpha values
-  const colorMapping = {
-    "el mapa no es el territorio": color(6, 214, 160, 255),       // Bright teal (main node)
-    "tectónicas de la otredad": color(239, 71, 111, 220), // Coral red
-    "pueblos pangea": color(86, 163, 166, 220),               // Ocean blue
-    "Fuga Transcriptural": color(255, 209, 102, 220),     // Golden yellow
-    "fantasmas y ancestros": color(167, 201, 87, 220),        // Lime green
-    "manifiesto de la resistencia poética": color(131, 96, 195, 220), // Purple
-    "cumbia rebajada/formas migrantes": color(255, 170, 51, 220), // Orange
-    "ciber-gobierno": color(66, 103, 178, 220),            // Facebook blue
-    "economía solidaria": color(255, 147, 188, 220),         // Pink
-    "tecno-economía": color(95, 204, 132, 220),             // Forest green
-    "el sur del norte/sami": color(64, 156, 255, 220), // Sky blue
-    "iluminación oscura": color(180, 180, 180, 220),           // Gray for new concept
-    "UAIIN universidad indígena": color(255, 102, 102, 220), // Bright red
-    "El Emigrante - historia infinita": color(255, 153, 102, 220) // Bright orange
-  };
-
-  // Add subtle white stroke to make nodes more distinct
-  stroke(252, 252, 252, 80);
-  strokeWeight(1.5);
-
-  // Return the color for the concept, or a default color if not found
-  return colorMapping[concepts[index]] || color(180, 180, 180, 220);
+  // Use index to maintain same colors regardless of language
+  switch (index) {
+    case 0:  return color(239, 71, 111, 220);  // Coral red
+    case 1:  return color(255, 209, 102, 220); // Golden yellow
+    case 2:  return color(86, 163, 166, 220);  // Ocean blue
+    case 3:  return color(255, 107, 107, 220); // Salmon pink
+    case 4:  return color(167, 201, 87, 220);  // Lime green
+    case 5:  return color(131, 96, 195, 220);  // Purple
+    case 6:  return color(255, 170, 51, 220);  // Orange
+    case 7:  return color(66, 103, 178, 220);  // Facebook blue
+    case 8:  return color(255, 147, 188, 220); // Pink
+    case 9:  return color(95, 204, 132, 220);  // Forest green
+    case 10: return color(64, 156, 255, 220);  // Sky blue
+    case 11: return color(180, 180, 180, 220); // Gray
+    case 12: return color(255, 102, 102, 220); // Bright red
+    case 13: return color(255, 153, 102, 220); // Bright orange
+    default: return color(180, 180, 180, 220); // Default gray
+  }
 }
 
 function keyPressed() {
@@ -888,7 +953,7 @@ function mouseClicked() {
     let size = (pos.connections + 1) * 20;
     let d = dist(mouseX, mouseY, pos.x, pos.y);
     if (d < size/2) {
-      let concept = concepts[index];
+      let concept = translations[currentLanguage].concepts[index];
       console.log('Clicked on:', concept); // Debug log
       
       if (urls[concept]) {
@@ -901,13 +966,11 @@ function mouseClicked() {
   });
 }
 
-// Add new function to draw control panel
+// Update drawControlPanel function
 function drawControlPanel() {
   let x = width - controlPanelWidth - controlPanelMargin;
   let y = controlPanelMargin;
-  
-  // Update panel height to accommodate new controls
-  controlPanelHeight = 200; // Increased for new controls
+  let controls = translations[currentLanguage].controls;
   
   fill(COLORS.darkBlue + "99");
   noStroke();
@@ -920,37 +983,37 @@ function drawControlPanel() {
   let textY = y + 15;
   let lineHeight = 20;
   
-  text('CONTROLES:', textX, textY);
+  text(controls.title, textX, textY);
   textY += lineHeight + 5;
   
-  text(`[L] Líneas: ${showLines ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[L] ${controls.lines}: ${showLines ? 'ON' : 'OFF'}`, textX, textY);
   textY += lineHeight;
   
-  text(`[T] Texto: ${showText ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[T] ${controls.text}: ${showText ? 'ON' : 'OFF'}`, textX, textY);
   textY += lineHeight;
   
-  text(`[B] Borde: ${showBoundary ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[B] ${controls.boundary}: ${showBoundary ? 'ON' : 'OFF'}`, textX, textY);
   textY += lineHeight;
   
-  text(`[C] Círculos: ${showEllipses ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[C] ${controls.circles}: ${showEllipses ? 'ON' : 'OFF'}`, textX, textY);
   textY += lineHeight;
   
-  text(`[V] Rastros: ${useVisualTrails ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[V] ${controls.trails}: ${useVisualTrails ? 'ON' : 'OFF'}`, textX, textY);
   textY += lineHeight;
   
-  text(`[F] Relleno: ${showBoundaryFill ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[F] ${controls.fill}: ${showBoundaryFill ? 'ON' : 'OFF'}`, textX, textY);
   textY += lineHeight;
   
-  text(`[P] Todos los Grupos: ${showGroups ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[P] ${controls.groups}: ${showGroups ? 'ON' : 'OFF'}`, textX, textY);
   textY += lineHeight;
   
-  text(`[1] Fuerzas Económicas: ${showOutsideGroup ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[1] ${controls.tealGroup}: ${showOutsideGroup ? 'ON' : 'OFF'}`, textX, textY);
   textY += lineHeight;
   
-  text(`[2] Patrones Migratorios: ${showInsideGroup ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[2] ${controls.yellowGroup}: ${showInsideGroup ? 'ON' : 'OFF'}`, textX, textY);
   textY += lineHeight;
   
-  text(`[3] Fenómenos Naturales: ${showChaseGroup ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[3] ${controls.redGroup}: ${showChaseGroup ? 'ON' : 'OFF'}`, textX, textY);
 }
 
 // Updated drawBoundaryText function
@@ -1017,11 +1080,11 @@ function drawBoundaryText(hull) {
         // Just change color and cursor, no rectangle
         fill(COLORS.yellow);
         // Only show hand cursor if there's a URL
-        if (urls[BOUNDARY_TEXT]) {
+        if (urls[translations[currentLanguage].boundary]) {
           cursor(HAND);
         }
-        if (mouseIsPressed && urls[BOUNDARY_TEXT]) {
-          window.open(urls[BOUNDARY_TEXT], '_blank');
+        if (mouseIsPressed && urls[translations[currentLanguage].boundary]) {
+          window.open(urls[translations[currentLanguage].boundary], '_blank');
         }
       } else {
         // More subtle color pulsing
@@ -1036,13 +1099,31 @@ function drawBoundaryText(hull) {
       
       // Draw text with subtle shadow
       fill(COLORS.darkBlue + "80");
-      text(BOUNDARY_TEXT, 1, 1);
+      text(translations[currentLanguage].boundary, 1, 1);
       fill(d < 30 ? COLORS.yellow : COLORS.teal);
-      text(BOUNDARY_TEXT, 0, 0);
+      text(translations[currentLanguage].boundary, 0, 0);
       
       pop();
       break;
     }
     currentLength += segLength;
   }
+}
+
+// Add language toggle function
+function addLanguageToggle() {
+  let button = createButton(currentLanguage === 'es' ? '🇺🇸 English' : '🇪🇸 Español');
+  button.position(10, 10);
+  button.style('z-index', '100');
+  button.style('padding', '8px 16px');
+  button.style('font-size', '14px');
+  button.style('border', 'none');
+  button.style('border-radius', '4px');
+  button.style('background', 'rgba(38, 84, 124, 0.8)');
+  button.style('color', 'white');
+  button.style('cursor', 'pointer');
+  button.mousePressed(() => {
+    currentLanguage = currentLanguage === 'es' ? 'en' : 'es';
+    button.html(currentLanguage === 'es' ? '🇺🇸 English' : '🇪🇸 Español');
+  });
 }
