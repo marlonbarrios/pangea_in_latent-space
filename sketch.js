@@ -19,20 +19,20 @@ let offsets = [
 
 
 let concepts = [
-  "the map is not the territory", 
-  "tectonics of otherness", 
-  "pangea people",
-  "Transcriptural Fugue", 
-  "ghosts and ancestors", 
-  "manifesto the resistencia poetica",
-  "cumbia rebajada/migrating forms", 
-  "cyber-government", 
-  "solidarity economy", 
-  "techno-economy",
-  "the south of the north/sami",
-  "dark enlightment",
-  "UAIIN indigenous university",  // New concept
-  "The Emigrant - infinite story"  // New concept
+  "el mapa no es el territorio",
+  "tectónicas de la otredad",
+  "pueblos pangea",
+  "Fuga Transcriptural",
+  "fantasmas y ancestros",
+  "manifiesto de la resistencia poética",
+  "cumbia rebajada/formas migrantes",
+  "ciber-gobierno",
+  "economía solidaria",
+  "tecno-economía",
+  "el sur del norte/sami",
+  "iluminación oscura",
+  "UAIIN universidad indígena",
+  "El Emigrante - historia infinita"
 ];
 
 // Visibility flags
@@ -50,21 +50,20 @@ let showBoundary = true;
 
 // Add URLs object at the top with other global variables
 const urls = {
-  "pangea in latent space": "https://marlonbarrios.github.io/pangea_in_latent_space/",
-  "the map is not the territory": "https://en.wikipedia.org/wiki/Cartography",
-  "tectonics of otherness": "https://marlonbarrios.github.io/tectonics_of_otherness/",
-  "pangea people": "https://originarios.vercel.app/",
-  "Transcriptural Fugue": "https://transcripturalfugue-marlonbarrios-projects.vercel.app/",
-  "ghosts and ancestors": "https://en.wikipedia.org/wiki/Cultural_memory",
-  "manifesto the resistencia poetica": "https://www.youtube.com/watch?v=yrmAd6rIdqk&t=34s",
-  "cumbia rebajada/migrating forms": "https://en.wikipedia.org/wiki/Cumbia",
-  "cyber-government": "https://en.wikipedia.org/wiki/Cybernetics",
-  "solidarity economy": "https://en.wikipedia.org/wiki/Care_work",
-  "techno-economy": "https://en.wikipedia.org/wiki/Digital_economy",
-  "the south of the north/sami": "https://en.wikipedia.org/wiki/Sami_people",
-  "dark enlightment": "https://en.wikipedia.org/wiki/Dark_enlightenment",
-  "UAIIN indigenous university": "https://uaiinpebi-cric.edu.co/la-universidad/#resena",
-  "The Emigrant - infinite story": "https://www.latam.ufl.edu/people/center-based-faculty/luis-felipe-lomeli/"
+  "el mapa no es el territorio": "https://en.wikipedia.org/wiki/Cartography",
+  "tectónicas de la otredad": "https://marlonbarrios.github.io/tectonics_of_otherness/",
+  "pueblos pangea": "https://originarios.vercel.app/",
+  "Fuga Transcriptural": "https://transcripturalfugue-marlonbarrios-projects.vercel.app/",
+  "fantasmas y ancestros": "https://en.wikipedia.org/wiki/Cultural_memory",
+  "manifiesto de la resistencia poética": "https://www.youtube.com/watch?v=yrmAd6rIdqk&t=34s",
+  "cumbia rebajada/formas migrantes": "https://en.wikipedia.org/wiki/Cumbia",
+  "ciber-gobierno": "https://en.wikipedia.org/wiki/Cybernetics",
+  "economía solidaria": "https://en.wikipedia.org/wiki/Care_work",
+  "tecno-economía": "https://en.wikipedia.org/wiki/Digital_economy",
+  "el sur del norte/sami": "https://en.wikipedia.org/wiki/Sami_people",
+  "iluminación oscura": "https://en.wikipedia.org/wiki/Dark_enlightenment",
+  "UAIIN universidad indígena": "https://uaiinpebi-cric.edu.co/la-universidad/#resena",
+  "El Emigrante - historia infinita": "https://www.latam.ufl.edu/people/center-based-faculty/luis-felipe-lomeli/"
 };
 
 // Add new global variables for boundary animation
@@ -93,7 +92,7 @@ let showPangeaConnections = false;
 const BASE_NODE_SIZE = 20; // Increased from 20
 
 // Update the boundary text variables
-const BOUNDARY_TEXT = "pangea in latent space";
+const BOUNDARY_TEXT = "pangea en el espacio latente";
 let boundaryPosition = 0;
 let textWave = 10; // Increased from 0 to 10
 const BOUNDARY_OFFSET =-50; // Increased from 60 to 100 to keep text further from boundary
@@ -778,21 +777,20 @@ function drawConceptsAndLines() {
 function getColorForConcept(index) {
   // Create a palette of 12 distinct colors with carefully chosen alpha values
   const colorMapping = {
-    "pangea in latent space": color(6, 214, 160, 255),       // Bright teal (main node)
-    "the map is not the territory": color(239, 71, 111, 220), // Coral red
-    "tectonics of otherness": color(255, 209, 102, 220),     // Golden yellow
-    "pangea people": color(86, 163, 166, 220),               // Ocean blue
-    "written language": color(255, 107, 107, 220),           // Salmon pink
-    "ghosts and ancestors": color(167, 201, 87, 220),        // Lime green
-    "manifesto the resistencia poetica": color(131, 96, 195, 220), // Purple
-    "cumbia rebajada/migrating forms": color(255, 170, 51, 220), // Orange
-    "cyber-government": color(66, 103, 178, 220),            // Facebook blue
-    "solidarity economy": color(255, 147, 188, 220),         // Pink
-    "techno-economy": color(95, 204, 132, 220),             // Forest green
-    "the south of the north/sami": color(64, 156, 255, 220), // Sky blue
-    "dark enlightment": color(180, 180, 180, 220),           // Gray for new concept
-    "UAIIN indigenous university": color(255, 102, 102, 220), // Bright red
-    "The Emigrant - infinite story": color(255, 153, 102, 220) // Bright orange
+    "el mapa no es el territorio": color(6, 214, 160, 255),       // Bright teal (main node)
+    "tectónicas de la otredad": color(239, 71, 111, 220), // Coral red
+    "pueblos pangea": color(86, 163, 166, 220),               // Ocean blue
+    "Fuga Transcriptural": color(255, 209, 102, 220),     // Golden yellow
+    "fantasmas y ancestros": color(167, 201, 87, 220),        // Lime green
+    "manifiesto de la resistencia poética": color(131, 96, 195, 220), // Purple
+    "cumbia rebajada/formas migrantes": color(255, 170, 51, 220), // Orange
+    "ciber-gobierno": color(66, 103, 178, 220),            // Facebook blue
+    "economía solidaria": color(255, 147, 188, 220),         // Pink
+    "tecno-economía": color(95, 204, 132, 220),             // Forest green
+    "el sur del norte/sami": color(64, 156, 255, 220), // Sky blue
+    "iluminación oscura": color(180, 180, 180, 220),           // Gray for new concept
+    "UAIIN universidad indígena": color(255, 102, 102, 220), // Bright red
+    "El Emigrante - historia infinita": color(255, 153, 102, 220) // Bright orange
   };
 
   // Add subtle white stroke to make nodes more distinct
@@ -922,37 +920,37 @@ function drawControlPanel() {
   let textY = y + 15;
   let lineHeight = 20;
   
-  text('CONTROLS:', textX, textY);
+  text('CONTROLES:', textX, textY);
   textY += lineHeight + 5;
   
-  text(`[L] Lines: ${showLines ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[L] Líneas: ${showLines ? 'ON' : 'OFF'}`, textX, textY);
   textY += lineHeight;
   
-  text(`[T] Text: ${showText ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[T] Texto: ${showText ? 'ON' : 'OFF'}`, textX, textY);
   textY += lineHeight;
   
-  text(`[B] Boundary: ${showBoundary ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[B] Borde: ${showBoundary ? 'ON' : 'OFF'}`, textX, textY);
   textY += lineHeight;
   
-  text(`[C] Circles: ${showEllipses ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[C] Círculos: ${showEllipses ? 'ON' : 'OFF'}`, textX, textY);
   textY += lineHeight;
   
-  text(`[V] Trails: ${useVisualTrails ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[V] Rastros: ${useVisualTrails ? 'ON' : 'OFF'}`, textX, textY);
   textY += lineHeight;
   
-  text(`[F] Fill: ${showBoundaryFill ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[F] Relleno: ${showBoundaryFill ? 'ON' : 'OFF'}`, textX, textY);
   textY += lineHeight;
   
-  text(`[P] All Groups: ${showGroups ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[P] Todos los Grupos: ${showGroups ? 'ON' : 'OFF'}`, textX, textY);
   textY += lineHeight;
   
-  text(`[1] Teal Group: ${showOutsideGroup ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[1] Fuerzas Económicas: ${showOutsideGroup ? 'ON' : 'OFF'}`, textX, textY);
   textY += lineHeight;
   
-  text(`[2] Yellow Group: ${showInsideGroup ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[2] Patrones Migratorios: ${showInsideGroup ? 'ON' : 'OFF'}`, textX, textY);
   textY += lineHeight;
   
-  text(`[3] Red Group: ${showChaseGroup ? 'ON' : 'OFF'}`, textX, textY);
+  text(`[3] Fenómenos Naturales: ${showChaseGroup ? 'ON' : 'OFF'}`, textX, textY);
 }
 
 // Updated drawBoundaryText function
