@@ -1,35 +1,63 @@
-# Pangea in Latent Space - Interactive Visualization
+# Pangea in Latent Space
 
-An interactive visualization that explores the interconnections between different concepts in a dynamic, elastic boundary space. Built with p5.js, this project creates a fluid, organic interface where concepts float and interact within a bounded space.
+An interactive visualization exploring concepts through dynamic nodes and connections. The project supports both English and Spanish languages.
 
 ## Features
 
-- **Dynamic Elastic Boundary**: A fluid, animated boundary that contains and connects all concepts
-- **Interactive Nodes**: Clickable nodes representing different concepts, each linking to relevant resources
-- **Collision Detection**: Nodes maintain proper spacing and avoid overlapping
-- **Visual Effects**:
-  - Motion trails (Toggle with 'V' key)
-  - Boundary fill (Toggle with 'F' key)
-  - Dynamic text and node visibility
-  - Smooth animations and transitions
+- **Bilingual Support**: Toggle between English and Spanish interfaces
+- **Interactive Nodes**: Dynamic circles representing interconnected concepts
+- **Color-Coded Concepts**: Consistent colors across both languages
+- **Clickable Links**: Access related resources in both languages
+- **Visual Controls**: 
+  - [L] Toggle connection lines
+  - [T] Toggle text labels
+  - [C] Toggle circles
+  - [B] Toggle boundary
+  - [V] Toggle visual trails
+  - [F] Toggle boundary fill
+  - [P] Toggle all groups
+  - [1-3] Toggle individual groups
 
 ## Controls
 
-- **[L]** Toggle connection lines
-- **[T]** Toggle concept text
-- **[B]** Toggle boundary
-- **[C]** Toggle circles (nodes)
-- **[V]** Toggle motion trails
-- **[F]** Toggle boundary fill
-- **Slider**: Control animation speed ("TECTONICS")
+### English
+- Lines: Show/hide connections between concepts
+- Text: Show/hide concept labels
+- Circles: Show/hide node circles
+- Boundary: Show/hide the outer boundary
+- Trails: Enable/disable visual trails
+- Fill: Toggle boundary fill
+- Groups: Show/hide concept groups
 
-## Interaction
+### Spanish (Español)
+- Líneas: Mostrar/ocultar conexiones entre conceptos
+- Texto: Mostrar/ocultar etiquetas de conceptos
+- Círculos: Mostrar/ocultar círculos de nodos
+- Borde: Mostrar/ocultar el límite exterior
+- Rastros: Activar/desactivar rastros visuales
+- Relleno: Alternar relleno del borde
+- Grupos: Mostrar/ocultar grupos de conceptos
 
-- Hover over nodes to highlight them
-- Click nodes to visit related URLs
-- The text "pangea in latent space" follows the boundary and is clickable
-- Nodes maintain spacing through collision detection
-- Motion creates visual trails when enabled
+## Language Toggle
+
+Click the language button (🇺🇸/🇪🇸) in the top-left corner to switch between English and Spanish.
+
+## Installation
+
+1. Clone the repository
+2. Open `index.html` in a web browser
+3. No additional dependencies required
+
+## Technologies
+
+- p5.js
+- HTML5
+- CSS3
+- JavaScript
+
+## License
+
+[Add your license information here]
 
 ## Technical Details
 
@@ -53,12 +81,6 @@ An interactive visualization that explores the interconnections between differen
 - techno-economy
 - the south of the north/sami
 - dark enlightment
-
-## Installation
-
-1. Clone the repository
-2. Open index.html in a web browser
-3. No additional dependencies needed (p5.js is included via CDN)
 
 ## Credits
 
