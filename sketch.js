@@ -2,6 +2,7 @@
 let offsets = [
   { xoff: 500, yoff: 10, roff: 400 }, // Tectonics of Otherness
   { xoff: 700, yoff: 20, roff: 500 }, // Peoples and Features
+  { xoff: 800, yoff: 30, roff: 550 }, // The Map is not the Territory
   { xoff: 1000, yoff: 300, roff: 600 }, // Transcriptural Fugue
   { xoff: 1100, yoff: 400, roff: 700 }, // Memory and Ancestors
   { xoff: 1200, yoff: 500, roff: 800 }, // Manifesto the Residtencia Poetica
@@ -9,7 +10,6 @@ let offsets = [
   { xoff: 1400, yoff: 700, roff: 1000 }, // Cybernetics and Government
   { xoff: 1500, yoff: 800, roff: 1100 }, // Tejedoras (economias de cuidado)
   { xoff: 1600, yoff: 900, roff: 1200 }, // Techno Economy
-  { xoff: 1700, yoff: 1000, roff: 1300 }, // Pangea in Latent Space
   { xoff: 1800, yoff: 1100, roff: 1400 }, // The north of the south/Sami
   { xoff: 1900, yoff: 1200, roff: 1500 }, // Dark Enlightment
   { xoff: 2000, yoff: 1300, roff: 1600 }, // UAIIN
@@ -37,6 +37,7 @@ const translations = {
       "dark enlightment",
       "UAIIN indigenous university",
       "The Emigrant - infinite story"
+    
     ],
     controls: {
       title: "CONTROLS",
@@ -117,7 +118,7 @@ const urls = {
   "the south of the north/sami": "https://en.wikipedia.org/wiki/Sami_people",
   "dark enlightment": "https://en.wikipedia.org/wiki/Dark_enlightenment",
   "UAIIN indigenous university": "https://uaiinpebi-cric.edu.co/la-universidad/#resena",
-  "The Emigrant - infinite story": "https://www.latam.ufl.edu/people/center-based-faculty/luis-felipe-lomeli/",
+  "The Emigrant - infinite story": "https://el-immigrante.vercel.app/",
 
   // Spanish URLs (same destinations)
   "pangea en el espacio latente": "https://marlonbarrios.github.io/pangea_in_latent_space/",
@@ -134,7 +135,7 @@ const urls = {
   "el sur del norte/sami": "https://en.wikipedia.org/wiki/Sami_people",
   "iluminación oscura": "https://en.wikipedia.org/wiki/Dark_enlightenment",
   "UAIIN universidad indígena": "https://uaiinpebi-cric.edu.co/la-universidad/#resena",
-  "El Emigrante - historia infinita": "https://www.latam.ufl.edu/people/center-based-faculty/luis-felipe-lomeli/"
+  "El Emigrante - historia infinita": "https://el-immigrante.vercel.app/"
 };
 
 // Add new global variables for boundary animation
@@ -570,65 +571,52 @@ function drawConceptsAndLines() {
   let positions = offsets.map(off => ({
     x: noise(off.xoff) * width,
     y: noise(off.yoff) * height,
-    r: noise(off.roff) * 200,
     connections: 0
   }));
 
-  // First count connections
+  // Count connections without special case for index 0
   positions.forEach((pos, i) => {
     for (let j = i + 1; j < positions.length; j++) {
-      if (i === 0 || j === 0) {
+      let d = dist(pos.x, pos.y, positions[j].x, positions[j].y);
+      if (d < 200) {
         positions[i].connections++;
         positions[j].connections++;
-      } else {
-        let d = dist(pos.x, pos.y, positions[j].x, positions[j].y);
-        if (d < 200) {
-          positions[i].connections++;
-          positions[j].connections++;
-        }
       }
     }
   });
 
-  // Add collision avoidance with stronger repulsion
-  const REPULSION_STRENGTH = 0.5; // Increased from 0.5
-  const ITERATIONS = 5; // Increased from 2
-  const MIN_DISTANCE = 150; // Minimum distance between circle centers
+  // Collision avoidance without skipping any nodes
+  const REPULSION_STRENGTH = 0.5;
+  const ITERATIONS = 5;
+  const MIN_DISTANCE = 150;
 
-  // Perform multiple iterations of collision resolution
   for (let iter = 0; iter < ITERATIONS; iter++) {
     positions.forEach((pos1, i) => {
-      if (i === 0) return; // Skip Pangea node
-      
       let size1 = (pos1.connections + 1) * BASE_NODE_SIZE;
       let radius1 = size1 / 2;
 
       positions.forEach((pos2, j) => {
-        if (i <= j) return; // Skip self and already processed pairs
+        if (i >= j) return; // Only skip self and already processed
         
         let size2 = (pos2.connections + 1) * BASE_NODE_SIZE;
         let radius2 = size2 / 2;
         
-        let minDist = Math.max((radius1 + radius2) * 1.2, MIN_DISTANCE); // Use larger of minimum distance or circle sizes
+        let minDist = Math.max((radius1 + radius2) * 1.2, MIN_DISTANCE);
         let d = dist(pos1.x, pos1.y, pos2.x, pos2.y);
         
         if (d < minDist) {
-          // Calculate repulsion vector
           let angle = atan2(pos2.y - pos1.y, pos2.x - pos1.x);
           let overlap = minDist - d;
           
-          // Move circles apart with stronger force
           let moveX = cos(angle) * overlap * REPULSION_STRENGTH;
           let moveY = sin(angle) * overlap * REPULSION_STRENGTH;
           
-          // Apply movement (split between both circles)
           pos1.x -= moveX * 0.5;
           pos1.y -= moveY * 0.5;
           pos2.x += moveX * 0.5;
           pos2.y += moveY * 0.5;
           
-          // Keep circles within canvas bounds with padding
-          let padding = 50; // Increased padding from canvas edges
+          let padding = 50;
           pos1.x = constrain(pos1.x, radius1 + padding, width - radius1 - padding);
           pos1.y = constrain(pos1.y, radius1 + padding, height - radius1 - padding);
           pos2.x = constrain(pos2.x, radius2 + padding, width - radius2 - padding);
@@ -638,23 +626,19 @@ function drawConceptsAndLines() {
     });
   }
 
-  // Draw lines if enabled
-  if (showLines || showPangeaConnections) {
-    positions.forEach((pos, i) => {
-      // Skip Pangea (index 0) in line drawing
-      if (i === 0) return;
-      
-      for (let j = i + 1; j < positions.length; j++) {
-        if (j === 0) continue; // Skip Pangea connections
-        
-        let d = dist(pos.x, pos.y, positions[j].x, positions[j].y);
+  // Draw lines without skipping any nodes
+  if (showLines) {
+    positions.forEach((pos1, i) => {
+      positions.forEach((pos2, j) => {
+        if (i >= j) return;
+        let d = dist(pos1.x, pos1.y, pos2.x, pos2.y);
         if (d < 200) {
           let thickness = map(d, 0, 200, 8, 1);
           stroke(COLORS.white);
           strokeWeight(thickness);
-          line(pos.x, pos.y, positions[j].x, positions[j].y);
+          line(pos1.x, pos1.y, pos2.x, pos2.y);
         }
-      }
+      });
     });
   }
 
@@ -800,8 +784,6 @@ function drawConceptsAndLines() {
 
   // Draw nodes
   positions.forEach((pos, index) => {
-    if (index === 0) return; // Skip drawing Pangea node
-    
     let size = (pos.connections + 1) * BASE_NODE_SIZE;
     
     // Check hover regardless of circle visibility
