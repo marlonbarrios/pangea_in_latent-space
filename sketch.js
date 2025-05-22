@@ -42,7 +42,7 @@ const translations = {
     controls: {
       title: "CONTROLS",
       lines: "Lines",
-      text: "Text",
+      text: "Legend",
       circles: "Circles",
       boundary: "Boundary",
       trails: "Trails",
@@ -74,7 +74,7 @@ const translations = {
     controls: {
       title: "CONTROLES",
       lines: "Líneas",
-      text: "Texto",
+      text: "Legenda",
       circles: "Círculos",
       boundary: "Borde",
       trails: "Rastros",
@@ -87,13 +87,13 @@ const translations = {
     boundary: "pangea en el espacio latente"
   }
 };
-
-// Visibility flags
+  
+  // Visibility flags
 let showLines = true;
 let showEllipses = false;
 let showText = false; // Make sure text is off by default
-
-let slider; // Slider for controlling animation speed
+  
+  let slider; // Slider for controlling animation speed
 
 // Add these variables at the top with other global variables
 let hoveredIndex = -1; // Track which circle is being hovered
@@ -109,13 +109,13 @@ const urls = {
   "tectonics of otherness": "https://marlonbarrios.github.io/tectonics_of_otherness/",
   "pangea people": "https://originarios.vercel.app/",
   "Transcriptural Fugue": "https://transcripturalfugue-marlonbarrios-projects.vercel.app/",
-  "ghosts and ancestors": "https://en.wikipedia.org/wiki/Cultural_memory",
+  "ghosts and ancestors": "https://in-pursuit-of-stolen-ghosts.vercel.app/",
   "manifesto the resistencia poetica": "https://www.youtube.com/watch?v=yrmAd6rIdqk&t=34s",
-  "cumbia rebajada/migrating forms": "https://en.wikipedia.org/wiki/Cumbia",
-  "cyber-government": "https://en.wikipedia.org/wiki/Cybernetics",
+  "cumbia rebajada/migrating forms": "https://en.wikipedia.org/wiki/I%27m_No_Longer_Here",
+  "cyber-government": "https://en.wikipedia.org/wiki/Project_Cybersyn",
   "solidarity economy": "https://en.wikipedia.org/wiki/Care_work",
   "techno-economy": "https://en.wikipedia.org/wiki/Digital_economy",
-  "the south of the north/sami": "https://en.wikipedia.org/wiki/Sami_people",
+  "the south of the north/sami": "https://www.modernamuseet.se/stockholm/en/exhibitions/britta-marakatt-labba/",
   "dark enlightment": "https://en.wikipedia.org/wiki/Dark_enlightenment",
   "UAIIN indigenous university": "https://uaiinpebi-cric.edu.co/la-universidad/#resena",
   "The Emigrant - infinite story": "https://el-immigrante.vercel.app/",
@@ -126,13 +126,13 @@ const urls = {
   "tectónicas de la otredad": "https://marlonbarrios.github.io/tectonics_of_otherness/",
   "pueblos pangea": "https://originarios.vercel.app/",
   "Fuga Transcriptural": "https://transcripturalfugue-marlonbarrios-projects.vercel.app/",
-  "fantasmas y ancestros": "https://en.wikipedia.org/wiki/Cultural_memory",
+  "fantasmas y ancestros": "https://in-pursuit-of-stolen-ghosts.vercel.app/",
   "manifiesto de la resistencia poética": "https://www.youtube.com/watch?v=yrmAd6rIdqk&t=34s",
-  "cumbia rebajada/formas migrantes": "https://en.wikipedia.org/wiki/Cumbia",
-  "ciber-gobierno": "https://en.wikipedia.org/wiki/Cybernetics",
+  "cumbia rebajada/formas migrantes": "https://en.wikipedia.org/wiki/I%27m_No_Longer_Here",
+  "ciber-gobierno": "https://en.wikipedia.org/wiki/Project_Cybersyn",
   "economía solidaria": "https://en.wikipedia.org/wiki/Care_work",
   "tecno-economía": "https://en.wikipedia.org/wiki/Digital_economy",
-  "el sur del norte/sami": "https://en.wikipedia.org/wiki/Sami_people",
+  "el sur del norte/sami": "https://www.modernamuseet.se/stockholm/en/exhibitions/britta-marakatt-labba/",
   "iluminación oscura": "https://en.wikipedia.org/wiki/Dark_enlightenment",
   "UAIIN universidad indígena": "https://uaiinpebi-cric.edu.co/la-universidad/#resena",
   "El Emigrante - historia infinita": "https://el-immigrante.vercel.app/"
@@ -144,9 +144,9 @@ const NOISE_INCREMENT = 0.02;
 const ELASTICITY = 40; // Controls how much the boundary can stretch
 
 // Add to global variables
-let controlPanelWidth = 200;
-let controlPanelHeight = 120;
-let controlPanelMargin = 20;
+let controlPanelWidth = 220;  // Fixed width
+let controlPanelHeight = 260; // Fixed height to fit all controls
+let controlPanelMargin = 20;  // Fixed margin
 
 // Update the COLORS object with the new palette
 const COLORS = {
@@ -186,6 +186,9 @@ let showGroups = true;  // Changed from showPopulation
 let showOutsideGroup = true;  // Changed from showOutsidePopulation
 let showInsideGroup = true;   // Changed from showInsidePopulation
 let showChaseGroup = true;    // Changed from showChasePopulation
+
+// Add global variable to track hovered topic
+let hoveredTopicIndex = -1;
 
 // Add Boid class
 class Boid {
@@ -474,9 +477,9 @@ class Boid {
     point(this.position.x, this.position.y);
   }
 }
-
-function setup() {
-  createCanvas(windowWidth, windowHeight);
+  
+  function setup() {
+    createCanvas(windowWidth, windowHeight);
   background(COLORS.darkBlue);
   
   // Initialize with English
@@ -512,72 +515,77 @@ function setup() {
   for (let boid of insideBoids) {
     boid.type = 'inside';
   }
-}
-
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  slider.position(20, height - 40);
-}
-
-function draw() {
-  // Reset to crosshairs at start of each frame
-  cursor(CROSS);
-
-  // Instead of clearing with background, use transparent overlay
-  if (useVisualTrails) {
-    // Add multiple semi-transparent layers for more intense trails
-    push();
-    noStroke();
-    
-    // First layer - very transparent for long trails
-    fill(COLORS.darkBlue + '10'); // More transparent
-    rect(0, 0, width, height);
-    
-    // Second layer - slightly more opaque for medium trails
-    fill(COLORS.darkBlue + '08'); // Even more transparent
-    rect(0, 0, width, height);
-    
-    // Add a subtle blur effect
-    drawingContext.filter = 'blur(1px)';
-    pop();
-  } else {
-    // Normal background clear
-    background(COLORS.darkBlue);
-    drawingContext.filter = 'none';
+  
+  updateControlPanelDimensions(); // Initialize panel dimensions
   }
-
-  let speed = slider.value();
-
-  offsets.forEach(off => {
-    off.xoff += speed;
-    off.yoff += speed;
-    off.roff += speed;
-  });
-
-  drawConceptsAndLines();
   
-  drawControlPanel();
+  function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+  slider.position(20, height - 40);
+  updateControlPanelDimensions(); // Update panel dimensions on resize
+  }
   
-  // Draw slider label
-  push();
-  textAlign(LEFT, CENTER);
-  textSize(14);
-  fill(COLORS.white);
-  text('TECTONICS', 20, height - 55);
-  pop();
-}
+  function draw() {
+    // Reset to crosshairs at start of each frame
+    cursor(CROSS);
 
-function drawConceptsAndLines() {
-  let positions = offsets.map(off => ({
-    x: noise(off.xoff) * width,
-    y: noise(off.yoff) * height,
+    // Instead of clearing with background, use transparent overlay
+    if (useVisualTrails) {
+      // Add multiple semi-transparent layers for more intense trails
+      push();
+      noStroke();
+      
+      // First layer - very transparent for long trails
+      fill(COLORS.darkBlue + '10');
+      rect(0, 0, width, height);
+      
+      // Second layer - slightly more opaque for medium trails
+      fill(COLORS.darkBlue + '08');
+      rect(0, 0, width, height);
+      
+      // Add a subtle blur effect
+      drawingContext.filter = 'blur(1px)';
+      pop();
+    } else {
+      background(COLORS.darkBlue);
+      drawingContext.filter = 'none';
+    }
+
+    // Get speed from slider
+    let speed = slider.value();
+
+    // Update positions with fluid motion
+    offsets.forEach(off => {
+      off.xoff += speed;
+      off.yoff += speed;
+      off.roff += speed;
+    });
+
+    // Draw all elements
+    drawConceptsAndLines();
+    drawControlPanel();
+    drawTopicsList();
+
+    // Draw slider label
+    push();
+    textAlign(LEFT, CENTER);
+    textSize(14);
+    fill(COLORS.white);
+    text('TECTONICS', 20, height - 55);
+    pop();
+  }
+  
+  function drawConceptsAndLines() {
+    let positions = offsets.map(off => ({
+      x: noise(off.xoff) * width,
+      y: noise(off.yoff) * height,
     connections: 0
-  }));
-
+    }));
+  
   // Count connections without special case for index 0
-  positions.forEach((pos, i) => {
-    for (let j = i + 1; j < positions.length; j++) {
-      let d = dist(pos.x, pos.y, positions[j].x, positions[j].y);
+      positions.forEach((pos, i) => {
+        for (let j = i + 1; j < positions.length; j++) {
+          let d = dist(pos.x, pos.y, positions[j].x, positions[j].y);
       if (d < 200) {
         positions[i].connections++;
         positions[j].connections++;
@@ -786,11 +794,10 @@ function drawConceptsAndLines() {
   positions.forEach((pos, index) => {
     let size = (pos.connections + 1) * BASE_NODE_SIZE;
     
-    // Check hover regardless of circle visibility
+    // Check hover for circle
     let d = dist(mouseX, mouseY, pos.x, pos.y);
     if (d < size/2) {
       hoveredIndex = index;
-      // Only show hand cursor if there's a URL for this concept
       if (urls[translations[currentLanguage].concepts[index]]) {
         cursor(HAND);
       }
@@ -798,31 +805,50 @@ function drawConceptsAndLines() {
     
     // Draw circles if enabled
     if (showEllipses) {
+      // Draw highlight for list hover
+      if (index === hoveredTopicIndex) {
+        push();
+        noFill();
+        stroke(getColorForConcept(index));
+        strokeWeight(3);
+        ellipse(pos.x, pos.y, size + 12, size + 12);
+        pop();
+      }
+      
+      // Draw hover effect for direct circle hover
       if (d < size/2) {
-        // More visible hover effect
+        push();
         stroke(255, 255, 255, 100);
         strokeWeight(3);
         fill(255, 255, 255, 40);
         ellipse(pos.x, pos.y, size + 12, size + 12);
+        pop();
       }
       
+      // Draw base circle
+      push();
+      stroke(255, 255, 255, 100);
+      strokeWeight(1);
       fill(getColorForConcept(index));
       ellipse(pos.x, pos.y, size, size);
+      pop();
     }
     
-    // Draw text if enabled, regardless of circle visibility
+    // Draw text if enabled
     if (showText) {
-      textSize(16);
+      push();
       textAlign(CENTER, CENTER);
+      textSize(16);
       textStyle(BOLD);
       noStroke();
-      fill("#1a1a1a"); // Very dark gray, almost black
+      fill("#1a1a1a");
       text(translations[currentLanguage].concepts[index], pos.x, pos.y);
       textStyle(NORMAL);
+      pop();
     }
   });
 
-  // Reset Pangea connections flag if not hovering over any circle
+  // Reset hover state if not hovering over any circle
   if (hoveredIndex === -1) {
     showPangeaConnections = false;
     cursor(AUTO);
@@ -848,15 +874,16 @@ function getColorForConcept(index) {
     case 13: return color(255, 153, 102, 220); // Bright orange
     default: return color(180, 180, 180, 220); // Default gray
   }
-}
-
-function keyPressed() {
-  if (key === 'l') {
-    showLines = !showLines;
-  } else if (key === 'c') {
-    showEllipses = !showEllipses;
-  } else if (key === 't') {
-    showText = !showText;
+  }
+  
+  function keyPressed() {
+    if (key === 'l') {
+      showLines = !showLines;
+    } else if (key === 'c') {
+      showEllipses = !showEllipses;
+    } else if (key === 't') {
+      showText = !showText;
+    showList = !showList; // Toggle list with text
   } else if (key === 'b') {
     showBoundary = !showBoundary;
   } else if (key === 'v') {
@@ -956,48 +983,56 @@ function drawControlPanel() {
   let y = controlPanelMargin;
   let controls = translations[currentLanguage].controls;
   
-  fill(COLORS.darkBlue + "99");
+  // Main panel with higher opacity
+  push();
+  fill(COLORS.darkBlue + "EE"); // More opaque background
   noStroke();
   rect(x, y, controlPanelWidth, controlPanelHeight, 10);
   
+  // Content
   textAlign(LEFT, TOP);
-  textSize(14);
+  textSize(14); // Fixed text size
   fill(COLORS.white);
   let textX = x + 15;
   let textY = y + 15;
-  let lineHeight = 20;
+  let lineHeight = 22; // Slightly increased for better readability
   
+  // Title
+  push();
+  textStyle(BOLD);
+  fill(COLORS.white);
   text(controls.title, textX, textY);
-  textY += lineHeight + 5;
+  pop();
+  textY += lineHeight * 1.2;
   
-  text(`[L] ${controls.lines}: ${showLines ? 'ON' : 'OFF'}`, textX, textY);
-  textY += lineHeight;
+  // Control items
+  const items = [
+    { key: 'L', prop: 'lines', state: showLines },
+    { key: 'T', prop: 'text', state: showText },
+    { key: 'B', prop: 'boundary', state: showBoundary },
+    { key: 'C', prop: 'circles', state: showEllipses },
+    { key: 'V', prop: 'trails', state: useVisualTrails },
+    { key: 'F', prop: 'fill', state: showBoundaryFill },
+    { key: 'P', prop: 'groups', state: showGroups },
+    { key: '1', prop: 'tealGroup', state: showOutsideGroup },
+    { key: '2', prop: 'yellowGroup', state: showInsideGroup },
+    { key: '3', prop: 'redGroup', state: showChaseGroup }
+  ];
+
+  items.forEach(item => {
+    // Highlight active states more distinctly
+    if (item.state) {
+      fill(COLORS.white);
+      textStyle(BOLD);
+    } else {
+      fill(COLORS.white + 'AA');
+      textStyle(NORMAL);
+    }
+    text(`[${item.key}] ${controls[item.prop]}: ${item.state ? 'ON' : 'OFF'}`, textX, textY);
+    textY += lineHeight;
+  });
   
-  text(`[T] ${controls.text}: ${showText ? 'ON' : 'OFF'}`, textX, textY);
-  textY += lineHeight;
-  
-  text(`[B] ${controls.boundary}: ${showBoundary ? 'ON' : 'OFF'}`, textX, textY);
-  textY += lineHeight;
-  
-  text(`[C] ${controls.circles}: ${showEllipses ? 'ON' : 'OFF'}`, textX, textY);
-  textY += lineHeight;
-  
-  text(`[V] ${controls.trails}: ${useVisualTrails ? 'ON' : 'OFF'}`, textX, textY);
-  textY += lineHeight;
-  
-  text(`[F] ${controls.fill}: ${showBoundaryFill ? 'ON' : 'OFF'}`, textX, textY);
-  textY += lineHeight;
-  
-  text(`[P] ${controls.groups}: ${showGroups ? 'ON' : 'OFF'}`, textX, textY);
-  textY += lineHeight;
-  
-  text(`[1] ${controls.tealGroup}: ${showOutsideGroup ? 'ON' : 'OFF'}`, textX, textY);
-  textY += lineHeight;
-  
-  text(`[2] ${controls.yellowGroup}: ${showInsideGroup ? 'ON' : 'OFF'}`, textX, textY);
-  textY += lineHeight;
-  
-  text(`[3] ${controls.redGroup}: ${showChaseGroup ? 'ON' : 'OFF'}`, textX, textY);
+  pop();
 }
 
 // Updated drawBoundaryText function
@@ -1110,4 +1145,83 @@ function addLanguageToggle() {
     currentLanguage = currentLanguage === 'es' ? 'en' : 'es';
     button.html(currentLanguage === 'es' ? '🇺🇸 English' : '🇪🇸 Español');
   });
+}
+
+// Add new global variables
+let showList = false; // Controls list visibility
+let listX = 20; // List position from left
+let listY = 60; // List position from top (below language button)
+let listSpacing = 25; // Spacing between list items
+
+// Update drawTopicsList function
+function drawTopicsList() {
+  if (!showList) return;
+
+  push();
+  // Draw semi-transparent background for list
+  fill(COLORS.darkBlue + 'CC');
+  noStroke();
+  rect(10, 50, 300, height - 60, 10);
+
+  // Draw list items
+  textAlign(LEFT, TOP);
+  textSize(14);
+  let y = listY;
+  
+  translations[currentLanguage].concepts.forEach((concept, index) => {
+    // Check if mouse is over this item
+    let isHover = mouseX > listX && mouseX < listX + 280 &&
+                  mouseY > y && mouseY < y + listSpacing;
+    
+    if (isHover) {
+      hoveredTopicIndex = index;
+      fill(getColorForConcept(index));
+      cursor(HAND);
+    } else {
+      fill(255);
+    }
+
+    // Draw the text
+    text(concept, listX, y);
+    
+    // Add underline if it has a URL
+    if (urls[concept]) {
+      let textW = textWidth(concept);
+      if (isHover) {
+        stroke(getColorForConcept(index));
+      } else {
+        stroke(255, 255, 255, 100);
+      }
+      strokeWeight(1);
+      line(listX, y + 18, listX + textW, y + 18);
+    }
+    
+    y += listSpacing;
+  });
+  pop();
+}
+
+// Add click handler for list items
+function mousePressed() {
+  if (showList) {
+    let y = listY;
+    translations[currentLanguage].concepts.forEach((concept) => {
+      if (mouseX > listX && mouseX < listX + 280 &&
+          mouseY > y && mouseY < y + listSpacing) {
+        if (urls[concept]) {
+          window.open(urls[concept], '_blank');
+        }
+      }
+      y += listSpacing;
+    });
+  }
+  
+  // ... rest of your existing mousePressed code ...
+  }
+
+// Update control panel dimensions to be fixed and visible
+function updateControlPanelDimensions() {
+  controlPanelWidth = 220;  // Fixed width
+  controlPanelHeight = 260; // Fixed height to fit all controls
+  controlPanelMargin = 20;  // Fixed margin
 }
