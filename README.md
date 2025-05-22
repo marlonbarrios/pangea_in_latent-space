@@ -7,13 +7,13 @@ An interactive visualization exploring connections between concepts, territories
 ## Preview
 
 ![Pangea Network View](image1.png)
-*Dynamic network visualization with interactive nodes*
+
 
 ![Concept Connections](image2.png)
-*Bilingual interface with concept connections*
+
 
 ![Control Interface](image3.png)
-*Interactive controls and list view*
+
 
 ## Description
 

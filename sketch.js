@@ -196,6 +196,9 @@ let showChaseGroup = true;    // Changed from showChasePopulation
 // Add global variable to track hovered topic
 let hoveredTopicIndex = -1;
 
+// Add a constant to identify the special node
+const PANGEA_NODE_INDEX = 0; // Index of "pangea in latent space" in the concepts array
+
 // Add Boid class
 class Boid {
   constructor(x, y, type) {
@@ -582,11 +585,34 @@ class Boid {
   }
   
   function drawConceptsAndLines() {
-    let positions = offsets.map(off => ({
-      x: noise(off.xoff) * width,
-      y: noise(off.yoff) * height,
-    connections: 0
-    }));
+    let positions = offsets.map((off, index) => {
+      let x = noise(off.xoff) * width;
+      let y = noise(off.yoff) * height;
+      
+      // Keep "pangea in latent space" node inside boundary
+      if (index === PANGEA_NODE_INDEX) {
+        // Calculate distance from center
+        let centerX = width/2;
+        let centerY = height/2;
+        let dx = x - centerX;
+        let dy = y - centerY;
+        let distance = sqrt(dx * dx + dy * dy);
+        
+        // If too close to boundary, move it inward
+        let maxDistance = min(width, height) * 0.35; // Keep within 35% of screen
+        if (distance > maxDistance) {
+          let angle = atan2(dy, dx);
+          x = centerX + cos(angle) * maxDistance;
+          y = centerY + sin(angle) * maxDistance;
+        }
+      }
+      
+      return {
+        x: x,
+        y: y,
+        connections: 0
+      };
+    });
   
   // Count connections without special case for index 0
       positions.forEach((pos, i) => {
