@@ -23,20 +23,24 @@ let currentLanguage = 'en'; // Changed from 'es' to 'en'
 const translations = {
   en: {
     concepts: [
+      "pangea in latent space",
       "the map is not the territory",
       "tectonics of otherness",
       "pangea people",
       "Transcriptural Fugue",
-      "ghosts and ancestors",
+      "In pursuit of stolen ghosts",
       "manifesto the resistencia poetica",
       "cumbia rebajada/migrating forms",
-      "cyber-government",
+      "Project Cybersyn",
       "solidarity economy",
       "techno-economy",
       "the south of the north/sami",
       "dark enlightment",
       "UAIIN indigenous university",
-      "The Emigrant - infinite story"
+      "The Emigrant - infinite story",
+      "relentless epistemic acts"
+
+    
     
     ],
     controls: {
@@ -56,20 +60,22 @@ const translations = {
   },
   es: {
     concepts: [
+      "pangea en el espacio latente",
       "el mapa no es el territorio",
       "tectónicas de la otredad",
       "pueblos pangea",
       "Fuga Transcriptural",
-      "fantasmas y ancestros",
+     "en busca de fantasmas robados",
       "manifiesto de la resistencia poética",
       "cumbia rebajada/formas migrantes",
-      "ciber-gobierno",
+      "Proyecto Cybersyn",
       "economía solidaria",
       "tecno-economía",
       "el sur del norte/sami",
       "iluminación oscura",
       "UAIIN universidad indígena",
-      "El Emigrante - historia infinita"
+      "El Emigrante - historia infinita",
+      "actos epistémicos implacables"
     ],
     controls: {
       title: "CONTROLES",
@@ -105,14 +111,14 @@ let showBoundary = true;
 const urls = {
   // English URLs
   "pangea in latent space": "https://marlonbarrios.github.io/pangea_in_latent_space/",
-  "the map is not the territory": "https://en.wikipedia.org/wiki/Cartography",
+  "the map is not the territory": "https://www.youtube.com/watch?v=MOoYjYLFhl0",
   "tectonics of otherness": "https://marlonbarrios.github.io/tectonics_of_otherness/",
   "pangea people": "https://originarios.vercel.app/",
   "Transcriptural Fugue": "https://transcripturalfugue-marlonbarrios-projects.vercel.app/",
   "ghosts and ancestors": "https://in-pursuit-of-stolen-ghosts.vercel.app/",
   "manifesto the resistencia poetica": "https://www.youtube.com/watch?v=yrmAd6rIdqk&t=34s",
   "cumbia rebajada/migrating forms": "https://en.wikipedia.org/wiki/I%27m_No_Longer_Here",
-  "cyber-government": "https://en.wikipedia.org/wiki/Project_Cybersyn",
+  "Project Cybersyn": "https://en.wikipedia.org/wiki/Project_Cybersyn",
   "solidarity economy": "https://en.wikipedia.org/wiki/Care_work",
   "techno-economy": "https://en.wikipedia.org/wiki/Digital_economy",
   "the south of the north/sami": "https://www.modernamuseet.se/stockholm/en/exhibitions/britta-marakatt-labba/",
@@ -122,14 +128,14 @@ const urls = {
 
   // Spanish URLs (same destinations)
   "pangea en el espacio latente": "https://marlonbarrios.github.io/pangea_in_latent_space/",
-  "el mapa no es el territorio": "https://en.wikipedia.org/wiki/Cartography",
+  "el mapa no es el territorio": "https://www.youtube.com/watch?v=MOoYjYLFhl0",
   "tectónicas de la otredad": "https://marlonbarrios.github.io/tectonics_of_otherness/",
   "pueblos pangea": "https://originarios.vercel.app/",
   "Fuga Transcriptural": "https://transcripturalfugue-marlonbarrios-projects.vercel.app/",
   "fantasmas y ancestros": "https://in-pursuit-of-stolen-ghosts.vercel.app/",
   "manifiesto de la resistencia poética": "https://www.youtube.com/watch?v=yrmAd6rIdqk&t=34s",
   "cumbia rebajada/formas migrantes": "https://en.wikipedia.org/wiki/I%27m_No_Longer_Here",
-  "ciber-gobierno": "https://en.wikipedia.org/wiki/Project_Cybersyn",
+  "Project Cybersyn": "https://en.wikipedia.org/wiki/Project_Cybersyn",
   "economía solidaria": "https://en.wikipedia.org/wiki/Care_work",
   "tecno-economía": "https://en.wikipedia.org/wiki/Digital_economy",
   "el sur del norte/sami": "https://www.modernamuseet.se/stockholm/en/exhibitions/britta-marakatt-labba/",
@@ -485,10 +491,10 @@ class Boid {
   // Initialize with English
   currentLanguage = 'en';
   
-  // Initialize slider
-  slider = createSlider(0, 0.02, 0.0005, 0.001);
+  // Create slider with very low initial value
+  slider = createSlider(0.0001, 0.01, 0.0002, 0.0001); // min, max, default, step
   slider.position(20, height - 40);
-  slider.style('width', '170px');
+  slider.style('width', '120px');
   
   // Add language toggle with English as default
   addLanguageToggle();
@@ -551,10 +557,10 @@ class Boid {
       drawingContext.filter = 'none';
     }
 
-    // Get speed from slider
+    // Get speed from slider with very small increments
     let speed = slider.value();
 
-    // Update positions with fluid motion
+    // Update positions with minimal movement
     offsets.forEach(off => {
       off.xoff += speed;
       off.yoff += speed;

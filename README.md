@@ -1,87 +1,68 @@
 # Pangea in Latent Space
 
-An interactive visualization exploring concepts through dynamic nodes and connections. The project supports both English and Spanish languages.
+An interactive visualization exploring connections between concepts, territories, and epistemologies through a dynamic network of floating nodes.
+
+🔗 [Live App](https://transcripturalfugue-marlonbarrios-projects.vercel.app)
+
+## Preview
+
+![Pangea Network View](image1.png)
+*Dynamic network visualization with interactive nodes*
+
+![Concept Connections](image2.png)
+*Bilingual interface with concept connections*
+
+![Control Interface](image3.png)
+*Interactive controls and list view*
+
+## Description
+
+This project visualizes interconnected concepts as a living, breathing network. Each node represents a key concept or project, with dynamic connections forming between them as they move through space. The visualization includes:
+
+- Interactive floating nodes with clickable links
+- Bilingual support (English/Spanish)
+- Dynamic boundary visualization
+- Multiple visualization modes
+- Fluid animation with adjustable speed
+- Responsive design that adapts to window size
 
 ## Features
 
-- **Bilingual Support**: Toggle between English and Spanish interfaces
-- **Interactive Nodes**: Dynamic circles representing interconnected concepts
-- **Color-Coded Concepts**: Consistent colors across both languages
-- **Clickable Links**: Access related resources in both languages
-- **Visual Controls**: 
-  - [L] Toggle connection lines
-  - [T] Toggle text labels
-  - [C] Toggle circles
-  - [B] Toggle boundary
-  - [V] Toggle visual trails
-  - [F] Toggle boundary fill
-  - [P] Toggle all groups
-  - [1-3] Toggle individual groups
+- **Dynamic Network**: Nodes float and connect based on proximity
+- **Interactive Elements**: 
+  - Hover over nodes to highlight connections
+  - Click nodes to visit related resources
+  - Toggle different visualization modes
+  - Adjust animation speed
+- **Bilingual Interface**: 
+  - Toggle between English and Spanish
+  - Full translation of all UI elements and concepts
+- **Control Panel**:
+  - Lines [L]: Toggle connection lines
+  - Legend [T]: Show/hide text labels
+  - Circles [C]: Toggle node visibility
+  - Boundary [B]: Show/hide boundary
+  - Trails [V]: Enable visual trails
+  - Fill [F]: Toggle boundary fill
+- **List View**: Access all concepts with direct links
 
 ## Controls
 
-### English
-- Lines: Show/hide connections between concepts
-- Text: Show/hide concept labels
-- Circles: Show/hide node circles
-- Boundary: Show/hide the outer boundary
-- Trails: Enable/disable visual trails
-- Fill: Toggle boundary fill
-- Groups: Show/hide concept groups
-
-### Spanish (Español)
-- Líneas: Mostrar/ocultar conexiones entre conceptos
-- Texto: Mostrar/ocultar etiquetas de conceptos
-- Círculos: Mostrar/ocultar círculos de nodos
-- Borde: Mostrar/ocultar el límite exterior
-- Rastros: Activar/desactivar rastros visuales
-- Relleno: Alternar relleno del borde
-- Grupos: Mostrar/ocultar grupos de conceptos
-
-## Language Toggle
-
-Click the language button (🇺🇸/🇪🇸) in the top-left corner to switch between English and Spanish.
-
-## Installation
-
-1. Clone the repository
-2. Open `index.html` in a web browser
-3. No additional dependencies required
+- Use the control panel in the top-right corner to toggle different visualization modes
+- Click the language button to switch between English and Spanish
+- Use the slider at the bottom to adjust the movement speed
+- Press [Space] to toggle the concept list
 
 ## Technologies
 
-- p5.js
-- HTML5
-- CSS3
-- JavaScript
-
-## License
-
-[Add your license information here]
-
-## Technical Details
-
-- Built with p5.js
-- Uses Perlin noise for organic movement
-- Implements convex hull algorithm for boundary calculation
-- Features elastic animation and color transitions
-- Responsive design that adapts to window size
-
-## Concepts Included
-
-- the map is not the territory
-- tectonics of otherness
-- pangea people
-- written language
-- ghosts and ancestors
-- manifesto the resistencia poetica
-- cumbia rebajada/migrating forms
-- cyber-government
-- solidarity economy
-- techno-economy
-- the south of the north/sami
-- dark enlightment
+- p5.js for visualization and interaction
+- HTML5 Canvas for rendering
+- JavaScript for dynamic behavior
 
 ## Credits
 
-Created by Marlon Barrios Solano 
+Created by Marlon Barrios Solano
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details 
