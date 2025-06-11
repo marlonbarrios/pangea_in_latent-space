@@ -2,7 +2,7 @@
 
 An interactive visualization exploring connections between concepts, territories, and epistemologies through a dynamic network of floating nodes.
 
-🔗 [Live App](https://transcripturalfugue-marlonbarrios-projects.vercel.app)
+🔗 [https://marlonbarrios.github.io/pangea_in_latent-space/)
 
 ## Preview
 
