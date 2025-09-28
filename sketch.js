@@ -2340,14 +2340,16 @@ function drawNodeMenu() {
   // Draw menu background
   rect(menuX, menuY, menuWidth, menuHeight, 10);
   
-  // Draw title
+  // Draw title - no border, plain text
+  noStroke(); // Remove any text border
   fill(COLORS.white);
   textAlign(LEFT, TOP);
   textSize(18);
-  textStyle(NORMAL); // Changed from BOLD to NORMAL
+  textStyle(NORMAL);
   text("Node Links", menuX + 20, menuY + 20);
   
-  // Draw close instruction
+  // Draw close instruction - no border, plain text
+  noStroke(); // Remove any text border
   textSize(12);
   textStyle(NORMAL);
   fill(COLORS.white + "CC");
