@@ -1276,12 +1276,13 @@ class Boid {
     }
   });
 
-  // Collision avoidance without skipping any nodes
-  const REPULSION_STRENGTH = 0.5;
-  const ITERATIONS = 5;
-  const MIN_DISTANCE = 150;
+  // Collision avoidance without skipping any nodes - only if tectonics is active
+  if (speed > 0) {
+    const REPULSION_STRENGTH = 0.5;
+    const ITERATIONS = 5;
+    const MIN_DISTANCE = 150;
 
-  for (let iter = 0; iter < ITERATIONS; iter++) {
+    for (let iter = 0; iter < ITERATIONS; iter++) {
     positions.forEach((pos1, i) => {
       let size1 = (pos1.connections + 1) * BASE_NODE_SIZE;
       let radius1 = size1 / 2;
@@ -1315,6 +1316,7 @@ class Boid {
         }
       });
     });
+    }
   }
 
   // Draw lines without skipping any nodes
