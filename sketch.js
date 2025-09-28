@@ -56,7 +56,8 @@ const translations = {
       tealGroup: "teal group",
       yellowGroup: "yellow group",
       redGroup: "red group",
-      demo: "demo mode"
+      demo: "demo mode",
+      menu: "node menu"
     },
     boundary: "pangea in latent space",
     tectonics: "tectonics of otherness"
@@ -94,7 +95,8 @@ const translations = {
       tealGroup: "grupo turquesa",
       yellowGroup: "grupo amarillo",
       redGroup: "grupo rojo",
-      demo: "modo demo"
+      demo: "modo demo",
+      menu: "menú de nodos"
     },
     boundary: "pangea en el espacio latente",
     tectonics: "tectónicas de la otredad"
@@ -777,6 +779,11 @@ let frozenPositions = null; // Cache positions when tectonics is 0
 let previousSpeed = -1; // Track speed changes
 let showBoundaryFill = true; // New variable for boundary fill
 
+// Menu system variables
+let showNodeMenu = false;
+let nodeMenuX = 50;
+let nodeMenuY = 50;
+
 // Add these variables at the top
 let outsideBoids = [];
 let insideBoids = [];
@@ -1217,6 +1224,7 @@ class Boid {
     drawControlPanel();
     drawTopicsList();
   drawLinkMenu();
+  drawNodeMenu();
 
     // Draw slider label with same style as concept text
     push();
@@ -1644,10 +1652,15 @@ function getColorForConcept(index) {
     showInsideGroup = !showInsideGroup;
   } else if (key === '3') {
     showChaseGroup = !showChaseGroup;
+  } else if (key === 'm' || key === 'M') {
+    showNodeMenu = !showNodeMenu;
     } else if (key === 'Escape') {
       // Hide menus with Escape key
       if (showLinkMenu) {
         showLinkMenu = false;
+      }
+      if (showNodeMenu) {
+        showNodeMenu = false;
       }
     } else if (key === 'd' || key === 'D') {
       // Toggle demo mode
@@ -1705,7 +1718,50 @@ function getEnglishConceptName(index) {
 
 // Add mouseClicked function
 function mouseClicked() {
-  // First check if clicking on link menu circles
+  // First check if clicking on node menu
+  if (showNodeMenu) {
+    let menuWidth = 300;
+    let menuHeight = translations[currentLanguage].concepts.length * 35 + 60;
+    let menuX = nodeMenuX;
+    let menuY = nodeMenuY;
+    
+    // Keep menu on screen (same logic as in drawNodeMenu)
+    if (menuX + menuWidth > width - 20) menuX = width - menuWidth - 20;
+    if (menuY + menuHeight > height - 20) menuY = height - menuHeight - 20;
+    if (menuX < 20) menuX = 20;
+    if (menuY < 20) menuY = 20;
+    
+    let startY = menuY + 50;
+    let clickedOnMenu = false;
+    
+    translations[currentLanguage].concepts.forEach((concept, index) => {
+      let englishConcept = getEnglishConceptName(index);
+      let y = startY + index * 35;
+      
+      if (mouseX > menuX + 10 && mouseX < menuX + menuWidth - 10 &&
+          mouseY > y && mouseY < y + 30) {
+        if (urls[englishConcept]) {
+          console.log('Opening URL from node menu:', urls[englishConcept]);
+          window.open(urls[englishConcept], '_blank').focus();
+          clickedOnMenu = true;
+        }
+      }
+    });
+    
+    // If clicked outside menu, close it
+    if (!clickedOnMenu && !(mouseX > menuX && mouseX < menuX + menuWidth && 
+                           mouseY > menuY && mouseY < menuY + menuHeight)) {
+      showNodeMenu = false;
+    }
+    
+    // Don't process other clicks if we're in the menu
+    if (clickedOnMenu || (mouseX > menuX && mouseX < menuX + menuWidth && 
+                         mouseY > menuY && mouseY < menuY + menuHeight)) {
+      return;
+    }
+  }
+  
+  // Then check if clicking on link menu circles
   if (showLinkMenu) {
     let linkKeys = Object.keys(linkMenuLinks);
     
@@ -1868,7 +1924,8 @@ function drawControlPanel() {
     { key: '1', prop: 'tealGroup', state: showOutsideGroup },
     { key: '2', prop: 'yellowGroup', state: showInsideGroup },
     { key: '3', prop: 'redGroup', state: showChaseGroup },
-    { key: 'D', prop: 'demo', state: demoMode }
+    { key: 'D', prop: 'demo', state: demoMode },
+    { key: 'M', prop: 'menu', state: showNodeMenu }
   ];
 
   items.forEach(item => {
@@ -2227,6 +2284,84 @@ function drawLinkMenu() {
       text(linkKey.substring(mid), x, y + fontSize/2 + 2);
     }
     pop();
+  });
+  
+  pop();
+}
+
+// Draw node menu when 'M' is pressed
+function drawNodeMenu() {
+  if (!showNodeMenu) return;
+  
+  push();
+  
+  // Semi-transparent background
+  fill(COLORS.darkBlue + "E0");
+  stroke(COLORS.white + "AA");
+  strokeWeight(2);
+  
+  let menuWidth = 300;
+  let menuHeight = translations[currentLanguage].concepts.length * 35 + 60;
+  let menuX = nodeMenuX;
+  let menuY = nodeMenuY;
+  
+  // Keep menu on screen
+  if (menuX + menuWidth > width - 20) menuX = width - menuWidth - 20;
+  if (menuY + menuHeight > height - 20) menuY = height - menuHeight - 20;
+  if (menuX < 20) menuX = 20;
+  if (menuY < 20) menuY = 20;
+  
+  // Draw menu background
+  rect(menuX, menuY, menuWidth, menuHeight, 10);
+  
+  // Draw title
+  fill(COLORS.white);
+  textAlign(LEFT, TOP);
+  textSize(18);
+  textStyle(BOLD);
+  text("Node Links", menuX + 20, menuY + 20);
+  
+  // Draw close instruction
+  textSize(12);
+  textStyle(NORMAL);
+  fill(COLORS.white + "CC");
+  text("Press 'M' to close", menuX + menuWidth - 120, menuY + 20);
+  
+  // Draw node list
+  let startY = menuY + 50;
+  translations[currentLanguage].concepts.forEach((concept, index) => {
+    let englishConcept = getEnglishConceptName(index);
+    let y = startY + index * 35;
+    
+    // Check if mouse is over this item
+    let isHovered = mouseX > menuX + 10 && mouseX < menuX + menuWidth - 10 &&
+                   mouseY > y && mouseY < y + 30;
+    
+    // Highlight on hover
+    if (isHovered) {
+      fill(COLORS.teal + "40");
+      noStroke();
+      rect(menuX + 10, y, menuWidth - 20, 30, 5);
+      cursor(HAND);
+    }
+    
+    // Draw concept name
+    fill(isHovered ? COLORS.white : COLORS.white + "DD");
+    textAlign(LEFT, CENTER);
+    textSize(14);
+    textStyle(NORMAL);
+    text(concept, menuX + 20, y + 15);
+    
+    // Draw URL hint
+    if (urls[englishConcept]) {
+      fill(COLORS.teal + "AA");
+      textSize(10);
+      let urlText = urls[englishConcept];
+      if (urlText.length > 40) {
+        urlText = urlText.substring(0, 37) + "...";
+      }
+      text(urlText, menuX + 20, y + 25);
+    }
   });
   
   pop();
