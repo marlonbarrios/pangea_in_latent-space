@@ -1202,11 +1202,14 @@ class Boid {
 
     // Update positions with minimal movement - only if speed > 0
     if (speed > 0) {
-      offsets.forEach(off => {
-        off.xoff += speed;
-        off.yoff += speed;
-        off.roff += speed;
-      });
+    offsets.forEach(off => {
+      off.xoff += speed;
+      off.yoff += speed;
+      off.roff += speed;
+    });
+    } else if (frameCount % 60 === 0) {
+      // Debug: log first offset when speed is 0
+      console.log('Speed is 0, first offset:', offsets[0].xoff.toFixed(6), offsets[0].yoff.toFixed(6));
     }
 
     // Draw all elements
@@ -1240,14 +1243,20 @@ class Boid {
     // Check if speed just changed to 0 - if so, we need to calculate once more to cache
     let justStopped = (previousSpeed > 0 && speed === 0);
     
+    // Debug logging
+    if (speed === 0 && frameCount % 60 === 0) { // Log once per second when speed is 0
+      console.log('Speed is 0. frozenPositions exists:', frozenPositions !== null, 'justStopped:', justStopped);
+    }
+    
     if (speed === 0 && frozenPositions !== null && !justStopped) {
       // Use cached positions when tectonics is frozen (and not just stopped)
       positions = frozenPositions;
+      if (frameCount % 60 === 0) console.log('Using cached positions');
     } else {
       // Calculate new positions
       positions = offsets.map((off, index) => {
-        let x = noise(off.xoff) * width;
-        let y = noise(off.yoff) * height;
+      let x = noise(off.xoff) * width;
+      let y = noise(off.yoff) * height;
       
       // Keep all nodes within reasonable bounds to stay inside boundary
         let centerX = width/2;
@@ -1301,11 +1310,11 @@ class Boid {
 
   // Collision avoidance without skipping any nodes - only if tectonics is active
   if (speed > 0) {
-    const REPULSION_STRENGTH = 0.5;
-    const ITERATIONS = 5;
-    const MIN_DISTANCE = 150;
+  const REPULSION_STRENGTH = 0.5;
+  const ITERATIONS = 5;
+  const MIN_DISTANCE = 150;
 
-    for (let iter = 0; iter < ITERATIONS; iter++) {
+  for (let iter = 0; iter < ITERATIONS; iter++) {
     positions.forEach((pos1, i) => {
       let size1 = (pos1.connections + 1) * BASE_NODE_SIZE;
       let radius1 = size1 / 2;
@@ -1452,7 +1461,7 @@ class Boid {
       
       // Only update boundary animation if tectonics is active
       if (speed > 0) {
-        boundaryNoiseOffset += NOISE_INCREMENT;
+      boundaryNoiseOffset += NOISE_INCREMENT;
       }
     }
   }
