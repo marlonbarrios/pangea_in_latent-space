@@ -2371,10 +2371,10 @@ function drawNodeMenu() {
       cursor(HAND);
     }
     
-    // Draw concept name only (no URL display) - bold with border like concept text
+    // Draw concept name only (no URL display) - plain text with border
     textAlign(LEFT, CENTER);
     textSize(14);
-    textStyle(BOLD); // Make text bold
+    textStyle(NORMAL); // Plain text, not bold
     
     // Add text border (stroke) for better visibility
     stroke(0, 0, 0, 150); // Black border with transparency
