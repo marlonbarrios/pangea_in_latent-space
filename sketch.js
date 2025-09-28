@@ -2344,7 +2344,7 @@ function drawNodeMenu() {
   fill(COLORS.white);
   textAlign(LEFT, TOP);
   textSize(18);
-  textStyle(BOLD);
+  textStyle(NORMAL); // Changed from BOLD to NORMAL
   text("Node Links", menuX + 20, menuY + 20);
   
   // Draw close instruction
