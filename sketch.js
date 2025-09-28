@@ -133,7 +133,9 @@ const translations = {
       groups: "Tous les Groupes",
       tealGroup: "Groupe Sarcelle",
       yellowGroup: "Groupe Jaune",
-      redGroup: "Groupe Rouge"
+      redGroup: "Groupe Rouge",
+      demo: "mode démo",
+      menu: "menu des nœuds"
     },
     boundary: "pangea dans l'espace latent",
     tectonics: "TECTONIQUES DE L'ALTÉRITÉ"
@@ -170,7 +172,9 @@ const translations = {
       groups: "Alle Gruppen",
       tealGroup: "Türkise Gruppe",
       yellowGroup: "Gelbe Gruppe",
-      redGroup: "Rote Gruppe"
+      redGroup: "Rote Gruppe",
+      demo: "Demo-Modus",
+      menu: "Knotenmenu"
     },
     boundary: "pangea im latenten raum",
     tectonics: "TEKTONIK DER ANDERSARTIGKEIT"
@@ -207,7 +211,9 @@ const translations = {
       groups: "Todos os Grupos",
       tealGroup: "Grupo Turquesa",
       yellowGroup: "Grupo Amarelo",
-      redGroup: "Grupo Vermelho"
+      redGroup: "Grupo Vermelho",
+      demo: "modo demo",
+      menu: "menu de nós"
     },
     boundary: "pangea no espaço latente",
     tectonics: "TECTÔNICAS DA ALTERIDADE"
@@ -244,7 +250,9 @@ const translations = {
       groups: "Tutti i Gruppi",
       tealGroup: "Gruppo Turchese",
       yellowGroup: "Gruppo Giallo",
-      redGroup: "Gruppo Rosso"
+      redGroup: "Gruppo Rosso",
+      demo: "modalità demo",
+      menu: "menu nodi"
     },
     boundary: "pangea nello spazio latente",
     tectonics: "TETTONICHE DELL'ALTERITÀ"
@@ -281,7 +289,9 @@ const translations = {
       groups: "Все Группы",
       tealGroup: "Бирюзовая Группа",
       yellowGroup: "Желтая Группа",
-      redGroup: "Красная Группа"
+      redGroup: "Красная Группа",
+      demo: "демо режим",
+      menu: "меню узлов"
     },
     boundary: "пангея в латентном пространстве",
     tectonics: "ТЕКТОНИКИ ИНАКОВОСТИ"
@@ -310,7 +320,9 @@ const translations = {
       groups: "所有组",
       tealGroup: "青色组",
       yellowGroup: "黄色组",
-      redGroup: "红色组"
+      redGroup: "红色组",
+      demo: "演示模式",
+      menu: "节点菜单"
     },
     boundary: "潜在空间中的盘古大陆",
     tectonics: "他者性的构造学"
@@ -339,7 +351,9 @@ const translations = {
       groups: "全グループ",
       tealGroup: "ティールグループ",
       yellowGroup: "イエローグループ",
-      redGroup: "レッドグループ"
+      redGroup: "レッドグループ",
+      demo: "デモモード",
+      menu: "ノードメニュー"
     },
     boundary: "潜在空間のパンゲア",
     tectonics: "他者性のテクトニクス"
@@ -368,7 +382,9 @@ const translations = {
       groups: "جميع المجموعات",
       tealGroup: "المجموعة الزرقاء المخضرة",
       yellowGroup: "المجموعة الصفراء",
-      redGroup: "المجموعة الحمراء"
+      redGroup: "المجموعة الحمراء",
+      demo: "وضع العرض التوضيحي",
+      menu: "قائمة العقد"
     },
     boundary: "بانجيا في الفضاء الكامن",
     tectonics: "تكتونيات الآخرية"
@@ -397,7 +413,9 @@ const translations = {
       groups: "सभी समूह",
       tealGroup: "टील समूह",
       yellowGroup: "पीला समूह",
-      redGroup: "लाल समूह"
+      redGroup: "लाल समूह",
+      demo: "डेमो मोड",
+      menu: "नोड मेनू"
     },
     boundary: "गुप्त स्थान में पैंजिया",
     tectonics: "अन्यता के भूगर्भशास्त्र"
@@ -426,7 +444,9 @@ const translations = {
       groups: "모든 그룹",
       tealGroup: "청록색 그룹",
       yellowGroup: "노란색 그룹",
-      redGroup: "빨간색 그룹"
+      redGroup: "빨간색 그룹",
+      demo: "데모 모드",
+      menu: "노드 메뉴"
     },
     boundary: "잠재 공간의 판게아",
     tectonics: "타자성의 지각구조학"
@@ -455,7 +475,9 @@ const translations = {
       groups: "Makundi Yote",
       tealGroup: "Kundi la Teal",
       yellowGroup: "Kundi la Manjano",
-      redGroup: "Kundi la Nyekundu"
+      redGroup: "Kundi la Nyekundu",
+      demo: "hali ya onyesho",
+      menu: "menyu ya nodi"
     },
     boundary: "pangea katika nafasi ya siri",
     tectonics: "TEKTONIKI INOŚCI"
@@ -484,7 +506,9 @@ const translations = {
       groups: "Llapa Huñu",
       tealGroup: "Teal Huñu",
       yellowGroup: "Q'illu Huñu",
-      redGroup: "Puka Huñu"
+      redGroup: "Puka Huñu",
+      demo: "demo kaq",
+      menu: "nodo menu"
     },
     boundary: "pangea pakasqa espaciopi",
     tectonics: "HUKKUNAKUNA TEKTONIKAKUNA"
@@ -515,7 +539,9 @@ const translations = {
       groups: "Tüm Gruplar",
       tealGroup: "Deniz Yeşili Grup",
       yellowGroup: "Sarı Grup",
-      redGroup: "Kırmızı Grup"
+      redGroup: "Kırmızı Grup",
+      demo: "demo modu",
+      menu: "düğüm menüsü"
     },
     boundary: "gizli uzayda pangea",
     tectonics: "ÖTEKİLİĞİN TEKTONİKLERİ"
