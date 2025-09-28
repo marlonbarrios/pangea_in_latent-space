@@ -773,6 +773,7 @@ const BOUNDARY_OFFSET =-50; // Increased from 60 to 100 to keep text further fro
 
 // Add new state variable at the top
 let useVisualTrails = false;
+let frozenPositions = null; // Cache positions when tectonics is 0
 let showBoundaryFill = true; // New variable for boundary fill
 
 // Add these variables at the top
@@ -1233,9 +1234,16 @@ class Boid {
   }
   
   function drawConceptsAndLines(speed = 0) {
-    let positions = offsets.map((off, index) => {
-      let x = noise(off.xoff) * width;
-      let y = noise(off.yoff) * height;
+    let positions;
+    
+    if (speed === 0 && frozenPositions !== null) {
+      // Use cached positions when tectonics is frozen
+      positions = frozenPositions;
+    } else {
+      // Calculate new positions
+      positions = offsets.map((off, index) => {
+        let x = noise(off.xoff) * width;
+        let y = noise(off.yoff) * height;
       
       // Keep all nodes within reasonable bounds to stay inside boundary
         let centerX = width/2;
@@ -1264,6 +1272,14 @@ class Boid {
         connections: 0
       };
     });
+    
+    // Cache positions if speed is 0 for next frame
+    if (speed === 0) {
+      frozenPositions = positions.map(pos => ({...pos})); // Deep copy
+    } else {
+      frozenPositions = null; // Clear cache when moving
+    }
+  }
   
   // Count connections without special case for index 0
       positions.forEach((pos, i) => {
