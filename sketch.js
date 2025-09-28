@@ -1721,7 +1721,7 @@ function mouseClicked() {
   // First check if clicking on node menu
   if (showNodeMenu) {
     let menuWidth = 300;
-    let menuHeight = translations[currentLanguage].concepts.length * 35 + 60;
+    let menuHeight = translations[currentLanguage].concepts.length * 25 + 60;
     let menuX = nodeMenuX;
     let menuY = nodeMenuY;
     
@@ -1736,10 +1736,10 @@ function mouseClicked() {
     
     translations[currentLanguage].concepts.forEach((concept, index) => {
       let englishConcept = getEnglishConceptName(index);
-      let y = startY + index * 35;
+      let y = startY + index * 25;
       
       if (mouseX > menuX + 10 && mouseX < menuX + menuWidth - 10 &&
-          mouseY > y && mouseY < y + 30) {
+          mouseY > y && mouseY < y + 20) {
         if (urls[englishConcept]) {
           console.log('Opening URL from node menu:', urls[englishConcept]);
           window.open(urls[englishConcept], '_blank').focus();
@@ -2301,7 +2301,7 @@ function drawNodeMenu() {
   strokeWeight(2);
   
   let menuWidth = 300;
-  let menuHeight = translations[currentLanguage].concepts.length * 35 + 60;
+  let menuHeight = translations[currentLanguage].concepts.length * 25 + 60;
   let menuX = nodeMenuX;
   let menuY = nodeMenuY;
   
@@ -2331,37 +2331,26 @@ function drawNodeMenu() {
   let startY = menuY + 50;
   translations[currentLanguage].concepts.forEach((concept, index) => {
     let englishConcept = getEnglishConceptName(index);
-    let y = startY + index * 35;
+    let y = startY + index * 25;
     
     // Check if mouse is over this item
     let isHovered = mouseX > menuX + 10 && mouseX < menuX + menuWidth - 10 &&
-                   mouseY > y && mouseY < y + 30;
+                   mouseY > y && mouseY < y + 20;
     
     // Highlight on hover
     if (isHovered) {
       fill(COLORS.teal + "40");
       noStroke();
-      rect(menuX + 10, y, menuWidth - 20, 30, 5);
+      rect(menuX + 10, y, menuWidth - 20, 20, 5);
       cursor(HAND);
     }
     
-    // Draw concept name
+    // Draw concept name only (no URL display)
     fill(isHovered ? COLORS.white : COLORS.white + "DD");
     textAlign(LEFT, CENTER);
     textSize(14);
     textStyle(NORMAL);
-    text(concept, menuX + 20, y + 15);
-    
-    // Draw URL hint
-    if (urls[englishConcept]) {
-      fill(COLORS.teal + "AA");
-      textSize(10);
-      let urlText = urls[englishConcept];
-      if (urlText.length > 40) {
-        urlText = urlText.substring(0, 37) + "...";
-      }
-      text(urlText, menuX + 20, y + 25);
-    }
+    text(concept, menuX + 20, y + 10);
   });
   
   pop();
