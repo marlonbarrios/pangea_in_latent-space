@@ -19,12 +19,13 @@ An interactive visualization exploring connections between concepts, territories
 
 This project visualizes interconnected concepts as a living, breathing network. Each node represents a key concept or project, with dynamic connections forming between them as they move through space. The visualization includes:
 
-- Interactive floating nodes with clickable links
-- Bilingual support (English/Spanish)
+- Interactive floating nodes with clickable links (16 total nodes)
+- Multilingual support (15 languages including English, Spanish, French, German, Turkish, etc.)
 - Dynamic boundary visualization
-- Multiple visualization modes
+- Multiple visualization modes with random demo cycling
 - Fluid animation with adjustable speed
 - Responsive design that adapts to window size
+- People nodes linking to Theater im Depot Pangea event
 
 ## Features
 
@@ -34,9 +35,10 @@ This project visualizes interconnected concepts as a living, breathing network. 
   - Click nodes to visit related resources
   - Toggle different visualization modes
   - Adjust animation speed
-- **Bilingual Interface**: 
-  - Toggle between English and Spanish
+- **Multilingual Interface**: 
+  - Support for 15 languages via dropdown menu
   - Full translation of all UI elements and concepts
+  - Includes English, Spanish, French, German, Portuguese, Italian, Russian, Chinese, Japanese, Arabic, Hindi, Korean, Swahili, Quechua, Turkish
 - **Control Panel**:
   - Lines [L]: Toggle connection lines
   - Legend [T]: Show/hide text labels
@@ -48,10 +50,10 @@ This project visualizes interconnected concepts as a living, breathing network. 
 
 ## Controls
 
-- Use the control panel in the top-right corner to toggle different visualization modes
-- Click the language button to switch between English and Spanish
+- Use the control panel in the bottom-right corner to toggle different visualization modes
+- Use the language dropdown in the top-right to switch between 15 supported languages
 - Use the slider at the bottom to adjust the movement speed
-- Press [Space] to toggle the concept list
+- Press [D] to activate demo mode with automatic random cycling through visualization states
 
 ## Technologies
 
