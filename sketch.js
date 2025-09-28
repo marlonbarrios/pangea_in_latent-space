@@ -774,6 +774,7 @@ const BOUNDARY_OFFSET =-50; // Increased from 60 to 100 to keep text further fro
 // Add new state variable at the top
 let useVisualTrails = false;
 let frozenPositions = null; // Cache positions when tectonics is 0
+let previousSpeed = -1; // Track speed changes
 let showBoundaryFill = true; // New variable for boundary fill
 
 // Add these variables at the top
@@ -1236,8 +1237,11 @@ class Boid {
   function drawConceptsAndLines(speed = 0) {
     let positions;
     
-    if (speed === 0 && frozenPositions !== null) {
-      // Use cached positions when tectonics is frozen
+    // Check if speed just changed to 0 - if so, we need to calculate once more to cache
+    let justStopped = (previousSpeed > 0 && speed === 0);
+    
+    if (speed === 0 && frozenPositions !== null && !justStopped) {
+      // Use cached positions when tectonics is frozen (and not just stopped)
       positions = frozenPositions;
     } else {
       // Calculate new positions
@@ -1273,12 +1277,15 @@ class Boid {
       };
     });
     
-    // Cache positions if speed is 0 for next frame
+    // Cache positions immediately when speed becomes 0
     if (speed === 0) {
       frozenPositions = positions.map(pos => ({...pos})); // Deep copy
     } else {
       frozenPositions = null; // Clear cache when moving
     }
+    
+    // Update previous speed for next frame
+    previousSpeed = speed;
   }
   
   // Count connections without special case for index 0
