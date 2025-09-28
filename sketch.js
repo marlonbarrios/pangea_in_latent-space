@@ -1746,7 +1746,7 @@ function getEnglishConceptName(index) {
 function mouseClicked() {
   // First check if clicking on node menu
   if (showNodeMenu) {
-    let menuWidth = 300;
+    let menuWidth = 400; // Increased from 300 to fit longer titles like Dortmund
     let menuHeight = translations[currentLanguage].concepts.length * 25 + 60;
     let menuX = nodeMenuX;
     let menuY = nodeMenuY;
@@ -2326,7 +2326,7 @@ function drawNodeMenu() {
   stroke(COLORS.white + "AA");
   strokeWeight(2);
   
-  let menuWidth = 300;
+  let menuWidth = 400; // Increased from 300 to fit longer titles like Dortmund
   let menuHeight = translations[currentLanguage].concepts.length * 25 + 60;
   let menuX = nodeMenuX;
   let menuY = nodeMenuY;
