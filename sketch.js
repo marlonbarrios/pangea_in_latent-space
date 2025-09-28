@@ -1484,8 +1484,8 @@ class Boid {
     let d = dist(mouseX, mouseY, pos.x, pos.y);
     if (d < size/2) {
       hoveredIndex = index;
-      let concept = translations[currentLanguage].concepts[index];
-      if (urls[concept]) {
+      let englishConcept = getEnglishConceptName(index);
+      if (urls[englishConcept]) {
         cursor(HAND);
       }
     }
@@ -1659,6 +1659,11 @@ function getConvexHull(points) {
   return lower.concat(upper);
 }
 
+// Helper function to get the English concept name for URL lookup
+function getEnglishConceptName(index) {
+  return translations['en'].concepts[index];
+}
+
 // Add mouseClicked function
 function mouseClicked() {
   // First check if clicking on link menu circles
@@ -1731,19 +1736,20 @@ function mouseClicked() {
     }
     let d = dist(mouseX, mouseY, pos.x, pos.y);
     if (d < size/2) {
-      let concept = translations[currentLanguage].concepts[index];
-      console.log('Clicked on:', concept);
+      let displayConcept = translations[currentLanguage].concepts[index];
+      let englishConcept = getEnglishConceptName(index);
+      console.log('Clicked on:', displayConcept, '(English key:', englishConcept + ')');
       
-      if (urls[concept]) {
+      if (urls[englishConcept]) {
         // Check if it's a single URL or multiple URLs
-        if (typeof urls[concept] === 'string') {
+        if (typeof urls[englishConcept] === 'string') {
           // Single URL - open directly
-          console.log('Opening single URL:', urls[concept]);
-        window.open(urls[concept], '_blank').focus();
-        } else if (typeof urls[concept] === 'object') {
+          console.log('Opening single URL:', urls[englishConcept]);
+        window.open(urls[englishConcept], '_blank').focus();
+        } else if (typeof urls[englishConcept] === 'object') {
           // Multiple URLs - show menu
-          linkMenuConcept = concept;
-          linkMenuLinks = urls[concept];
+          linkMenuConcept = displayConcept;
+          linkMenuLinks = urls[englishConcept];
           
           // Position menu near the clicked node, slightly to the right
           let nodeSize = size; // Use the calculated size
@@ -1937,11 +1943,12 @@ function drawBoundaryText(hull) {
         // Just change color and cursor, no rectangle
         fill(COLORS.yellow);
         // Only show hand cursor if there's a URL
-        if (urls[translations[currentLanguage].boundary]) {
+        let boundaryKey = translations['en'].boundary; // Use English key for URL lookup
+        if (urls[boundaryKey]) {
           cursor(HAND);
         }
-        if (mouseIsPressed && urls[translations[currentLanguage].boundary]) {
-          window.open(urls[translations[currentLanguage].boundary], '_blank');
+        if (mouseIsPressed && urls[boundaryKey]) {
+          window.open(urls[boundaryKey], '_blank');
         }
       } else {
         // More subtle color pulsing with blue hue
@@ -2194,15 +2201,16 @@ function mousePressed() {
     translations[currentLanguage].concepts.forEach((concept, index) => {
       if (mouseX > listX && mouseX < listX + 200 &&
           mouseY > y && mouseY < y + listSpacing) {
-        if (urls[concept]) {
+        let englishConcept = getEnglishConceptName(index);
+        if (urls[englishConcept]) {
           // Check if it's a single URL or multiple URLs
-          if (typeof urls[concept] === 'string') {
+          if (typeof urls[englishConcept] === 'string') {
             // Single URL - open directly
-          window.open(urls[concept], '_blank');
-          } else if (typeof urls[concept] === 'object') {
+          window.open(urls[englishConcept], '_blank');
+          } else if (typeof urls[englishConcept] === 'object') {
             // Multiple URLs - show menu
             linkMenuConcept = concept;
-            linkMenuLinks = urls[concept];
+            linkMenuLinks = urls[englishConcept];
             
             // Position menu near the clicked list item, to the right
             linkMenuX = listX + 240; // Position to the right of the list
