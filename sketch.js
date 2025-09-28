@@ -1198,15 +1198,17 @@ class Boid {
     // Get speed from slider with very small increments
     let speed = slider.value();
 
-    // Update positions with minimal movement
-    offsets.forEach(off => {
-      off.xoff += speed;
-      off.yoff += speed;
-      off.roff += speed;
-    });
+    // Update positions with minimal movement - only if speed > 0
+    if (speed > 0) {
+      offsets.forEach(off => {
+        off.xoff += speed;
+        off.yoff += speed;
+        off.roff += speed;
+      });
+    }
 
     // Draw all elements
-    drawConceptsAndLines();
+    drawConceptsAndLines(speed);
     drawControlPanel();
     drawTopicsList();
   drawLinkMenu();
@@ -1230,7 +1232,7 @@ class Boid {
     pop();
   }
   
-  function drawConceptsAndLines() {
+  function drawConceptsAndLines(speed = 0) {
     let positions = offsets.map((off, index) => {
       let x = noise(off.xoff) * width;
       let y = noise(off.yoff) * height;
@@ -1423,7 +1425,10 @@ class Boid {
       // Draw the elastic text
       drawBoundaryText(hull);
       
-      boundaryNoiseOffset += NOISE_INCREMENT;
+      // Only update boundary animation if tectonics is active
+      if (speed > 0) {
+        boundaryNoiseOffset += NOISE_INCREMENT;
+      }
     }
   }
 
