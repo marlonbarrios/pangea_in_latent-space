@@ -775,7 +775,7 @@ const ELASTICITY = 40; // Controls how much the boundary can stretch
 
 // Add to global variables
 let controlPanelWidth = 180;  // Narrower width
-let controlPanelHeight = 260; // Fixed height to fit all controls
+let controlPanelHeight = 290; // Fixed height to fit all controls (increased for M key)
 let controlPanelMargin = 20;  // Fixed margin
 
 // Update the COLORS object with the new palette
@@ -2438,7 +2438,7 @@ function mousePressed() {
 // Update control panel dimensions to be fixed and visible
 function updateControlPanelDimensions() {
   controlPanelWidth = 180;  // Narrower width (reduced from 220)
-  controlPanelHeight = 260; // Fixed height to fit all controls
+  controlPanelHeight = 290; // Fixed height to fit all controls (increased for M key)
   controlPanelMargin = 20;  // Fixed margin
   
   // Ensure control panel fits on smaller screens
