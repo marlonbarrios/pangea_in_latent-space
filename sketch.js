@@ -2371,11 +2371,15 @@ function drawNodeMenu() {
       cursor(HAND);
     }
     
-    // Draw concept name only (no URL display)
-    fill(isHovered ? COLORS.white : COLORS.white + "DD");
+    // Draw concept name only (no URL display) - bold with border like concept text
     textAlign(LEFT, CENTER);
     textSize(14);
-    textStyle(NORMAL);
+    textStyle(BOLD); // Make text bold
+    
+    // Add text border (stroke) for better visibility
+    stroke(0, 0, 0, 150); // Black border with transparency
+    strokeWeight(2);
+    fill(isHovered ? COLORS.white : COLORS.white + "DD");
     text(concept, menuX + 20, y + 10);
   });
   
